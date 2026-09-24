@@ -150,7 +150,7 @@
       </div>
     </div>
 
-    <!-- ตัวกรองปีงบประมาณ -->
+    <!-- Filter -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#151e32] border border-slate-800 rounded-xl px-4 py-3">
       <div>
         <h3 class="text-xs sm:text-sm font-semibold text-slate-200">ตัวกรองวิเคราะห์ข้อมูลเชิงลึก</h3>
@@ -234,7 +234,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">📋 ตารางข้อมูลโครงการทั้งหมด</h3>
-          <p class="text-xs text-slate-400 mt-1">คลิกแก้ไขเพื่อดูหรือจัดการไฟล์เอกสารตัวอย่างของแต่ละโครงการ</p>
+          <p class="text-xs text-slate-400 mt-1">คลิกปุ่มด้านขวาเพื่อดูข้อมูลและเอกสารตัวอย่างของแต่ละโครงการ</p>
         </div>
         <div id="btnNewProjectTop" class="hidden">
           <button onclick="openProjectModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3.5 py-2 rounded-lg font-medium transition shadow flex items-center gap-1.5">
@@ -253,7 +253,7 @@
               <th class="p-3 text-right">งบอนุมัติ</th>
               <th class="p-3 text-right">เบิกจ่ายจริง</th>
               <th class="p-3 text-center">สถานะ</th>
-              <th class="p-3 text-right">จัดการ</th>
+              <th class="p-3 text-right">การจัดการ/เอกสาร</th>
             </tr>
           </thead>
           <tbody id="projectsTableBody" class="divide-y divide-slate-800">
@@ -295,7 +295,90 @@
     </div>
   </div>
 
-  <!-- ==================== Modal: เพิ่ม/แก้ไขโครงการ + ไฟล์ตัวอย่างในตัว ==================== -->
+  <!-- ==================== Modal 1: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง (Read-Only สำหรับบุคคลทั่วไป) ==================== -->
+  <div id="viewProjectModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
+    <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-2xl w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+      
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+          <h3 class="text-base sm:text-lg font-bold text-white">ข้อมูลโครงการและไฟล์ตัวอย่าง</h3>
+        </div>
+        <button onclick="closeViewProjectModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+
+      <!-- สรุปข้อมูลโครงการ (Read-Only Presentation) -->
+      <div class="space-y-3 bg-[#0b1120] p-4 rounded-xl border border-slate-800/80 text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400">รหัสโครงการ:</span>
+            <span id="vp_code" class="text-indigo-400 font-semibold bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">-</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400">ปีงบประมาณ:</span>
+            <span id="vp_fiscalYear" class="text-slate-200 font-semibold">-</span>
+          </div>
+          <div>
+            <span id="vp_status_badge" class="px-2.5 py-0.5 rounded text-[11px] font-medium">-</span>
+          </div>
+        </div>
+
+        <div>
+          <span class="text-slate-400 block mb-1">ชื่อโครงการ:</span>
+          <h4 id="vp_title" class="text-sm sm:text-base font-semibold text-white leading-relaxed">-</h4>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-slate-800/60">
+          <div>
+            <span class="text-slate-400">หมวดหมู่/ประเภท:</span>
+            <p id="vp_category" class="text-slate-200 mt-0.5">-</p>
+          </div>
+          <div>
+            <span class="text-slate-400">ผู้รับผิดชอบโครงการ:</span>
+            <p id="vp_owner" class="text-slate-200 font-medium mt-0.5">-</p>
+          </div>
+          <div>
+            <span class="text-slate-400">งบประมาณที่อนุมัติ:</span>
+            <p id="vp_approvedBudget" class="text-emerald-400 font-bold mt-0.5">-</p>
+          </div>
+          <div>
+            <span class="text-slate-400">เบิกจ่ายจริง:</span>
+            <p id="vp_disbursedAmount" class="text-amber-400 font-bold mt-0.5">-</p>
+          </div>
+        </div>
+
+        <!-- Google Drive Link รวม (ถ้ามี) -->
+        <div id="vp_driveLinkContainer" class="pt-2 border-t border-slate-800/60 hidden">
+          <span class="text-slate-400 block mb-1">โฟลเดอร์ Google Drive รวมของโครงการ:</span>
+          <a id="vp_driveLink" href="#" target="_blank" class="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 underline font-medium">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            <span>เปิดโฟลเดอร์โครงการบน Google Drive</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- รายการไฟล์เอกสารตัวอย่าง (Read-Only) -->
+      <div class="space-y-2">
+        <h4 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-1.5">
+          📁 คลังไฟล์เอกสารตัวอย่าง (Project Files)
+        </h4>
+        <div class="bg-[#0b1120] rounded-xl border border-slate-800 overflow-hidden">
+          <div id="viewProjectFilesList" class="divide-y divide-slate-800 text-xs">
+            <div class="p-4 text-center text-slate-500 text-xs">กำลังค้นหาไฟล์ตัวอย่าง...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-slate-800">
+        <button type="button" onclick="closeViewProjectModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-medium transition">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== Modal 2: เพิ่ม/แก้ไขโครงการ + ไฟล์ตัวอย่าง (Admin Only) ==================== -->
   <div id="projectModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-3xl w-full space-y-5 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
       
@@ -307,7 +390,7 @@
         <button onclick="closeProjectModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
 
-      <!-- ส่วนที่ 1: รายละเอียดโครงการ -->
+      <!-- ข้อมูลโครงการ -->
       <input type="hidden" id="p_id">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
         <div>
@@ -354,12 +437,12 @@
         </div>
       </div>
 
-      <!-- ส่วนที่ 2: ไฟล์โครงการตัวอย่าง -->
+      <!-- ไฟล์โครงการตัวอย่าง (Admin อัปโหลด/แก้ไข/ลบ) -->
       <div class="border-t border-slate-800 pt-4 space-y-3">
         <div class="flex items-center justify-between">
           <div>
             <h4 class="text-xs sm:text-sm font-semibold text-indigo-300 flex items-center gap-1.5">
-              📁 ไฟล์โครงการตัวอย่าง (Project Example Files)
+              📁 แนบไฟล์โครงการตัวอย่างเพิ่ม (Project Example Files)
             </h4>
             <p class="text-[11px] text-slate-400">อัปโหลดไฟล์ตัวอย่างพร้อมตั้งชื่อได้หลายไฟล์พร้อมกัน</p>
           </div>
@@ -390,7 +473,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal: ตั้งค่าระบบ & โลโก้ ==================== -->
+  <!-- ==================== Modal 3: ตั้งค่าระบบ & โลโก้ ==================== -->
   <div id="settingsModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-lg w-full space-y-4 shadow-2xl overflow-y-auto max-h-[90vh] custom-scrollbar">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -915,7 +998,7 @@
       });
     }
 
-    // ==================== Projects CRUD & Modal ไฟล์ตัวอย่าง ====================
+    // ==================== ตารางโครงการ & ปุ่มเปิด Popup ====================
     function renderProjectsTable() {
       const tbody = document.getElementById('projectsTableBody');
       const selectedYear = document.getElementById('yearFilterSelect').value;
@@ -930,11 +1013,16 @@
 
       filtered.forEach(p => {
         const color = getStatusColor(p.status);
-        const adminButtons = currentAdmin ? `
+        
+        // แยกปุ่มระหว่าง Admin และ บุคคลทั่วไป
+        const actionButton = currentAdmin ? `
           <button onclick='editProjectPrompt(${JSON.stringify(p)})' class="text-indigo-400 hover:text-indigo-300 font-medium mr-2">แก้ไข/ไฟล์</button>
           <button onclick="deleteProjectConfirm('${p.id}')" class="text-rose-400 hover:text-rose-300 font-medium">ลบ</button>
         ` : `
-          <button onclick='viewProjectDetails(${JSON.stringify(p)})' class="text-indigo-400 hover:text-indigo-300 font-medium">ดูไฟล์ตัวอย่าง</button>
+          <button onclick='openViewProjectModal(${JSON.stringify(p)})' class="bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 px-2.5 py-1 rounded-md text-xs font-medium transition flex items-center gap-1 ml-auto">
+            <span>📄</span>
+            <span>ดูไฟล์ตัวอย่าง</span>
+          </button>
         `;
 
         tbody.innerHTML += `
@@ -952,12 +1040,86 @@
                 ${p.status}
               </span>
             </td>
-            <td class="p-3 text-right whitespace-nowrap">${adminButtons}</td>
+            <td class="p-3 text-right whitespace-nowrap">${actionButton}</td>
           </tr>
         `;
       });
     }
 
+    // ==================== ระบบ Popup แสดงข้อมูลโครงการและไฟล์ (Read-Only) ====================
+    function openViewProjectModal(p) {
+      document.getElementById('vp_code').innerText = p.code || p.id || '-';
+      document.getElementById('vp_fiscalYear').innerText = p.fiscalYear ? `ปีงบฯ ${p.fiscalYear}` : '-';
+      document.getElementById('vp_title').innerText = p.title || '-';
+      document.getElementById('vp_category').innerText = p.category || '-';
+      document.getElementById('vp_owner').innerText = p.owner || '-';
+      document.getElementById('vp_approvedBudget').innerText = `฿${(p.approvedBudget || 0).toLocaleString('th-TH')} บาท`;
+      document.getElementById('vp_disbursedAmount').innerText = `฿${(p.disbursedAmount || 0).toLocaleString('th-TH')} บาท`;
+
+      const st = p.status || 'เสนอโครงการ';
+      const color = getStatusColor(st);
+      const stBadge = document.getElementById('vp_status_badge');
+      stBadge.innerText = st;
+      stBadge.style.backgroundColor = `${color}20`;
+      stBadge.style.color = color;
+      stBadge.style.border = `1px solid ${color}40`;
+
+      const driveBox = document.getElementById('vp_driveLinkContainer');
+      const driveLink = document.getElementById('vp_driveLink');
+      if (p.driveLink && p.driveLink.trim().startsWith('http')) {
+        driveLink.href = p.driveLink.trim();
+        driveBox.classList.remove('hidden');
+      } else {
+        driveBox.classList.add('hidden');
+      }
+
+      // แสดงรายการไฟล์ตัวอย่างของโครงการนี้
+      renderViewOnlyFiles(p.id);
+
+      document.getElementById('viewProjectModal').classList.remove('hidden');
+      document.getElementById('viewProjectModal').classList.add('flex');
+    }
+
+    function closeViewProjectModal() {
+      document.getElementById('viewProjectModal').classList.add('hidden');
+      document.getElementById('viewProjectModal').classList.remove('flex');
+    }
+
+    function renderViewOnlyFiles(projectId) {
+      const container = document.getElementById('viewProjectFilesList');
+      const files = globalProjectFiles.filter(f => String(f.projectId) === String(projectId));
+
+      if (files.length === 0) {
+        container.innerHTML = `
+          <div class="p-5 text-center text-slate-500 text-xs">
+            <span class="block text-xl mb-1">📭</span>
+            ยังไม่มีไฟล์เอกสารตัวอย่างสำหรับโครงการนี้
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      files.forEach((f, idx) => {
+        container.innerHTML += `
+          <div class="p-3 flex items-center justify-between hover:bg-slate-800/40 transition gap-3">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center flex-shrink-0 text-sm">📄</span>
+              <div class="min-w-0">
+                <div class="font-medium text-slate-200 text-xs truncate">${f.fileName}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">ผู้อัปโหลด: ${f.uploadedBy || '-'}</div>
+              </div>
+            </div>
+            <a href="${f.fileUrl}" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1 flex-shrink-0">
+              <span>เปิดดู/ดาวน์โหลด</span>
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        `;
+      });
+    }
+
+    // ==================== Modal จัดการโครงการ & ไฟล์ตัวอย่าง (Admin Only) ====================
     function openProjectModal() {
       document.getElementById('projectModalTitle').innerText = "เพิ่มโครงการใหม่และแนบไฟล์ตัวอย่าง";
       document.getElementById('p_id').value = "PRJ-" + Date.now();
@@ -1000,16 +1162,11 @@
       document.getElementById('projectModal').classList.add('flex');
     }
 
-    function viewProjectDetails(p) {
-      editProjectPrompt(p);
-    }
-
     function closeProjectModal() {
       document.getElementById('projectModal').classList.add('hidden');
       document.getElementById('projectModal').classList.remove('flex');
     }
 
-    // ==================== ระบบอัปโหลดไฟล์ตัวอย่างใน Modal ====================
     function addFileUploadRowInModal() {
       const container = document.getElementById("modalFileUploadContainer");
       const rowId = "m-file-" + Date.now();
@@ -1075,7 +1232,6 @@
       }
     }
 
-    // ==================== บันทึกโครงการ + อัปโหลดไฟล์พร้อมกัน ====================
     async function saveProjectSubmit() {
       const projectId = document.getElementById('p_id').value;
       const title = document.getElementById('p_title').value.trim();
