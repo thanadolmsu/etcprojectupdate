@@ -52,7 +52,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-[#0b1120] dark:text-slate-100 min-h-screen transition-colors duration-300">
 
-  <!-- ==================== Sticky Header (ชื่อหน่วยงานตัวใหญ่ โดดเด่น) ==================== -->
+  <!-- ==================== Sticky Header ==================== -->
   <header class="sticky top-0 z-40 w-full bg-slate-50/95 dark:bg-[#0b1120]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 shadow-sm transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 py-3 sm:py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-4">
       
@@ -66,7 +66,7 @@
         </div>
 
         <div>
-          <!-- ชื่อหน่วยงาน: ปรับขนาดตัวอักษรใหญ่ หนาพิเศษ โดดเด่นด้วย Gradient -->
+          <!-- ชื่อหน่วยงาน: ขนาดใหญ่พิเศษ โดดเด่น -->
           <div class="flex items-center gap-2">
             <h1 id="uiOrgName" class="text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 dark:from-indigo-400 dark:via-purple-300 dark:to-indigo-300 bg-clip-text text-transparent drop-shadow-sm">
               ภาควิชาเทคโนโลยีและสื่อสารการศึกษา
@@ -117,7 +117,7 @@
   <!-- ==================== Main Content Container ==================== -->
   <main class="max-w-7xl w-full mx-auto p-3 sm:p-5 md:p-6 space-y-6 sm:space-y-8">
     
-    <!-- แถบควบคุมสถานะผู้ล็อกอินตามสิทธิ์ (Admin / Head / Staff / Lecturer / Student / Executive) -->
+    <!-- แถบควบคุมสถานะผู้ล็อกอินตามสิทธิ์ -->
     <div id="adminControlBar" class="hidden bg-indigo-50/90 dark:bg-indigo-950/40 backdrop-blur-md border border-indigo-200 dark:border-indigo-500/30 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-md">
       <div class="flex items-center gap-2.5">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -214,17 +214,48 @@
       </div>
     </div>
 
-    <!-- Filter -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 shadow-sm">
-      <div>
-        <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">ตัวกรองวิเคราะห์ข้อมูลเชิงลึก</h3>
-        <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">เลือกปีงบประมาณเพื่อคำนวณสัดส่วนโครงการ</p>
+    <!-- ==================== ตัวกรองวิเคราะห์ข้อมูลเชิงลึก (ค้นหา / ปีงบฯ / ประเภทโครงการ) ==================== -->
+    <div class="bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-sm space-y-3.5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div>
+          <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+            <span>🔍</span> ตัวกรองวิเคราะห์ข้อมูลเชิงลึก (Advanced Analytics Filter)
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">ค้นหาชื่อโครงการ/ผู้รับผิดชอบ และกรองรายงานแยกตามปีหรือประเภทโครงการแบบผสมผสาน</p>
+        </div>
+        <button onclick="resetAllFilters()" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 self-start sm:self-auto">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          ล้างตัวกรองทั้งหมด
+        </button>
       </div>
-      <div class="flex items-center gap-2 w-full sm:w-auto">
-        <label for="yearFilterSelect" class="text-xs text-slate-600 dark:text-slate-400 font-medium whitespace-nowrap">ปีงบฯ:</label>
-        <select id="yearFilterSelect" onchange="onYearFilterChange()" class="w-full sm:w-auto bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:border-indigo-500 cursor-pointer">
-          <option value="ALL">ทุกปีงบประมาณ (ภาพรวม)</option>
-        </select>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+        
+        <!-- 1. ช่องค้นหาชื่อโครงการ / รหัส / ผู้รับผิดชอบ -->
+        <div class="space-y-1">
+          <label class="block font-medium text-slate-600 dark:text-slate-400">ค้นหา (ชื่อโครงการ / รหัส / ผู้รับผิดชอบ):</label>
+          <div class="relative">
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="พิมพ์คำค้นหา..." class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-slate-800 dark:text-white outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+            <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-400 pointer-events-none">🔍</span>
+          </div>
+        </div>
+
+        <!-- 2. List เลือกรายงานแต่ละปีงบประมาณ -->
+        <div class="space-y-1">
+          <label class="block font-medium text-slate-600 dark:text-slate-400">ปีงบประมาณ:</label>
+          <select id="yearFilterSelect" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 cursor-pointer">
+            <option value="ALL">ทุกปีงบประมาณ (รายงานภาพรวม)</option>
+          </select>
+        </div>
+
+        <!-- 3. List เลือกประเภทของโครงการ (Category) -->
+        <div class="space-y-1 sm:col-span-2 lg:col-span-1">
+          <label class="block font-medium text-slate-600 dark:text-slate-400">ประเภทโครงการ (Category):</label>
+          <select id="categoryFilterSelect" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 cursor-pointer truncate">
+            <option value="ALL">ทุกประเภทโครงการ</option>
+          </select>
+        </div>
+
       </div>
     </div>
 
@@ -533,15 +564,15 @@
         <div class="sm:col-span-2 bg-slate-50 dark:bg-[#0b1120] p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label class="block text-indigo-600 dark:text-indigo-300 font-semibold mb-1">💰 งบจัดสรรตามแผน (บาท) *</label>
-            <input type="number" id="p_budget" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-indigo-500 shadow-sm">
+            <input type="number" id="p_budget" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-indigo-500 shadow-sm">
           </div>
           <div>
             <label class="block text-emerald-600 dark:text-emerald-400 font-semibold mb-1">✅ งบประมาณที่อนุมัติ (บาท)</label>
-            <input type="number" id="p_approvedBudget" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-emerald-500 shadow-sm">
+            <input type="number" id="p_approvedBudget" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-emerald-500 shadow-sm">
           </div>
           <div>
             <label class="block text-amber-600 dark:text-amber-400 font-semibold mb-1">💳 เบิกจ่ายจริงสะสม (บาท)</label>
-            <input type="number" id="p_disbursedAmount" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-amber-500 shadow-sm">
+            <input type="number" id="p_disbursedAmount" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-amber-500 shadow-sm">
           </div>
         </div>
 
@@ -712,7 +743,6 @@
         </button>
       </div>
 
-      <!-- ตารางสมาชิก -->
       <div class="bg-slate-50 dark:bg-[#0b1120] rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto custom-scrollbar">
         <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 min-w-[800px]">
           <thead class="bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
@@ -804,7 +834,7 @@
 
       <div class="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
         <button type="button" onclick="closeUserEditModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-medium transition active:scale-95">ยกเลิก</button>
-        <button type="button" onclick="saveUserFromModalSubmit()" id="btnSaveUserModal" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-semibold text-white transition shadow-md shadow-indigo-600/30 active:scale-95">บันทึกสมาชิก</button>
+        <button type="button" onclick="saveUserFromModalSubmit()" id="btnSaveUserModal" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-semibold text-white transition shadow-md shadow-indigo-600/30 active:scale-95">บันทึกสมาชิก</button>
       </div>
     </div>
   </div>
@@ -1258,6 +1288,7 @@
           statusText.innerText = "ข้อมูลอัปเดตล่าสุด";
           globalProjects = result.projects || [];
           globalFiscalYears = result.fiscalYears || [];
+          initFilterDropdowns();
           renderMainDashboard();
         } else {
           statusText.innerText = "โหลดข้อมูลไม่สำเร็จ";
@@ -1267,48 +1298,100 @@
       }
     }
 
-    function renderMainDashboard() {
+    // สร้างตัวเลือก Dropdown สำหรับตัวกรองปีและประเภท
+    function initFilterDropdowns() {
+      // 1. Dropdown ปีงบประมาณ
       const yearsSet = new Set();
       globalFiscalYears.forEach(fy => yearsSet.add(String(fy.fiscalYear)));
       globalProjects.forEach(p => { if (p.fiscalYear) yearsSet.add(String(p.fiscalYear)); });
       const sortedYears = Array.from(yearsSet).sort();
 
-      const selectElem = document.getElementById('yearFilterSelect');
-      const currentSelected = selectElem.value;
-      selectElem.innerHTML = '<option value="ALL">ทุกปีงบประมาณ (ภาพรวม)</option>';
-      sortedYears.forEach(y => { selectElem.innerHTML += `<option value="${y}">ปีงบประมาณ ${y}</option>`; });
-      if (sortedYears.includes(currentSelected)) selectElem.value = currentSelected;
+      const yearSelect = document.getElementById('yearFilterSelect');
+      const curYear = yearSelect.value;
+      yearSelect.innerHTML = '<option value="ALL">ทุกปีงบประมาณ (รายงานภาพรวม)</option>';
+      sortedYears.forEach(y => { yearSelect.innerHTML += `<option value="${y}">ปีงบประมาณ ${y}</option>`; });
+      if (sortedYears.includes(curYear)) yearSelect.value = curYear;
+
+      // 2. Dropdown ประเภทของโครงการ
+      const catSet = new Set();
+      globalProjects.forEach(p => {
+        if (p.category && p.category.trim()) catSet.add(p.category.trim());
+      });
+      const sortedCats = Array.from(catSet).sort();
+
+      const catSelect = document.getElementById('categoryFilterSelect');
+      const curCat = catSelect.value;
+      catSelect.innerHTML = '<option value="ALL">ทุกประเภทโครงการ</option>';
+      sortedCats.forEach(c => { catSelect.innerHTML += `<option value="${c}">${c}</option>`; });
+      if (sortedCats.includes(curCat)) catSelect.value = curCat;
+    }
+
+    // ฟังก์ชันคำนวณและกรองข้อมูลแบบผสมผสาน (Multi-filtering)
+    function applyFilters() {
+      const searchKeyword = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const selectedYear = document.getElementById('yearFilterSelect').value;
+      const selectedCategory = document.getElementById('categoryFilterSelect').value;
+
+      let filtered = globalProjects;
+
+      // กรองปีงบประมาณ
+      if (selectedYear !== 'ALL') {
+        filtered = filtered.filter(p => String(p.fiscalYear) === String(selectedYear));
+      }
+
+      // กรองประเภทโครงการ
+      if (selectedCategory !== 'ALL') {
+        filtered = filtered.filter(p => (p.category || '').trim() === selectedCategory);
+      }
+
+      // กรองค้นหาชื่อโครงการ, รหัส, หรือผู้รับผิดชอบ
+      if (searchKeyword !== '') {
+        filtered = filtered.filter(p => 
+          (p.title && p.title.toLowerCase().includes(searchKeyword)) ||
+          (p.code && p.code.toLowerCase().includes(searchKeyword)) ||
+          (p.id && p.id.toLowerCase().includes(searchKeyword)) ||
+          (p.owner && p.owner.toLowerCase().includes(searchKeyword))
+        );
+      }
+
+      updateAnalyticsDashboard(filtered);
+    }
+
+    function resetAllFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('yearFilterSelect').value = 'ALL';
+      document.getElementById('categoryFilterSelect').value = 'ALL';
+      applyFilters();
+    }
+
+    function renderMainDashboard() {
+      // คำนวณกราฟแท่งเปรียบเทียบงบประมาณรายปี (คงเดิมสำหรับภาพรวม)
+      const yearsSet = new Set();
+      globalFiscalYears.forEach(fy => yearsSet.add(String(fy.fiscalYear)));
+      globalProjects.forEach(p => { if (p.fiscalYear) yearsSet.add(String(p.fiscalYear)); });
+      const sortedYears = Array.from(yearsSet).sort();
 
       const yearlyStats = {};
       sortedYears.forEach(y => { yearlyStats[y] = { planned: 0, approved: 0, disbursed: 0, count: 0 }; });
 
-      let totalAllPlanned = 0;
       globalFiscalYears.forEach(fy => {
         const y = String(fy.fiscalYear);
         const val = parseFloat(fy.totalBudget || 0);
         if (yearlyStats[y]) yearlyStats[y].planned = val;
-        totalAllPlanned += val;
       });
-
-      let totalAllApproved = 0, totalAllDisbursed = 0, ongoingCount = 0;
 
       globalProjects.forEach(p => {
         const y = String(p.fiscalYear || '');
         const approved = parseFloat(p.approvedBudget || 0);
         const disbursed = parseFloat(p.disbursedAmount || 0);
-        const st = (p.status || '').trim();
-
         if (yearlyStats[y]) {
           yearlyStats[y].approved += approved;
           yearlyStats[y].disbursed += disbursed;
           yearlyStats[y].count += 1;
         }
-
-        totalAllApproved += approved;
-        totalAllDisbursed += disbursed;
-        if (st.includes('ดำเนินงาน')) ongoingCount++;
       });
 
+      // Render การ์ดงบประมาณรายปี
       const cardsContainer = document.getElementById('fiscal-years-cards');
       cardsContainer.innerHTML = '';
       sortedYears.forEach(year => {
@@ -1332,56 +1415,64 @@
         `;
       });
 
-      document.getElementById('kpi-total-projects').innerText = globalProjects.length.toLocaleString();
-      document.getElementById('kpi-ongoing-count').innerText = `กำลังดำเนินงาน ${ongoingCount} โครงการ`;
-      document.getElementById('kpi-total-budget').innerText = '฿' + totalAllPlanned.toLocaleString('th-TH');
-      document.getElementById('kpi-approved-budget').innerText = '฿' + totalAllApproved.toLocaleString('th-TH');
-      document.getElementById('kpi-disbursed-amount').innerText = '฿' + totalAllDisbursed.toLocaleString('th-TH');
-
-      const totalAppRate = totalAllPlanned > 0 ? ((totalAllApproved / totalAllPlanned) * 100).toFixed(1) : 0;
-      const totalDisRate = totalAllApproved > 0 ? ((totalAllDisbursed / totalAllApproved) * 100).toFixed(1) : 0;
-      document.getElementById('kpi-approved-percent').innerText = `${totalAppRate}% ของงบจัดสรรทั้งหมด`;
-      document.getElementById('kpi-disbursed-percent').innerText = `เบิกจ่ายแล้ว ${totalDisRate}% ของงบอนุมัติ`;
-
       yearlyChart.data.labels = sortedYears.map(y => `ปี ${y}`);
       yearlyChart.data.datasets[0].data = sortedYears.map(y => yearlyStats[y].planned);
       yearlyChart.data.datasets[1].data = sortedYears.map(y => yearlyStats[y].approved);
       yearlyChart.data.datasets[2].data = sortedYears.map(y => yearlyStats[y].disbursed);
       yearlyChart.update();
 
-      updateYearBreakdowns(selectElem.value);
-      renderProjectsTable();
+      applyFilters();
       updateChartTheme();
     }
 
-    function onYearFilterChange() {
-      updateYearBreakdowns(document.getElementById('yearFilterSelect').value);
-      renderProjectsTable();
-    }
+    // อัปเดตสถิติ กราฟ และตารางตามชุดข้อมูลที่ถูกกรอง
+    function updateAnalyticsDashboard(filtered) {
+      const totalCount = filtered.length;
+      document.getElementById('kpi-total-projects').innerText = totalCount.toLocaleString();
 
-    function updateYearBreakdowns(selectedYear) {
-      let filtered = globalProjects;
-      if (selectedYear !== 'ALL') {
-        filtered = globalProjects.filter(p => String(p.fiscalYear) === String(selectedYear));
-      }
-
-      const total = filtered.length;
-      document.getElementById('cat-total-badge').innerText = `${total} โครงการ`;
-      document.getElementById('status-total-badge').innerText = `${total} โครงการ`;
+      let totalFilteredBudget = 0;
+      let totalFilteredApproved = 0;
+      let totalFilteredDisbursed = 0;
+      let ongoingCount = 0;
 
       const catCounts = {}, statusCounts = {}, ownerCounts = {};
+
       filtered.forEach(p => {
-        const cat = (p.category || 'ไม่ระบุประเภท').trim();
+        const b = parseFloat(p.budget || 0);
+        const app = parseFloat(p.approvedBudget || 0);
+        const dis = parseFloat(p.disbursedAmount || 0);
         const st = (p.status || 'เสนอโครงการ').trim();
+        const cat = (p.category || 'ไม่ระบุประเภท').trim();
         const ow = (p.owner || 'ไม่ระบุผู้รับผิดชอบ').trim();
+
+        totalFilteredBudget += b;
+        totalFilteredApproved += app;
+        totalFilteredDisbursed += dis;
+
+        if (st.includes('ดำเนินงาน')) ongoingCount++;
+
         catCounts[cat] = (catCounts[cat] || 0) + 1;
         statusCounts[st] = (statusCounts[st] || 0) + 1;
         ownerCounts[ow] = (ownerCounts[ow] || 0) + 1;
       });
 
-      renderCategorySection(catCounts, total);
-      renderStatusSection(statusCounts, total);
-      renderOwnerSection(ownerCounts, total);
+      document.getElementById('kpi-ongoing-count').innerText = `กำลังดำเนินงาน ${ongoingCount} โครงการ`;
+      document.getElementById('kpi-total-budget').innerText = '฿' + totalFilteredBudget.toLocaleString('th-TH');
+      document.getElementById('kpi-approved-budget').innerText = '฿' + totalFilteredApproved.toLocaleString('th-TH');
+      document.getElementById('kpi-disbursed-amount').innerText = '฿' + totalFilteredDisbursed.toLocaleString('th-TH');
+
+      const appRate = totalFilteredBudget > 0 ? ((totalFilteredApproved / totalFilteredBudget) * 100).toFixed(1) : 0;
+      const disRate = totalFilteredApproved > 0 ? ((totalFilteredDisbursed / totalFilteredApproved) * 100).toFixed(1) : 0;
+      document.getElementById('kpi-approved-percent').innerText = `${appRate}% ของงบตามแผน`;
+      document.getElementById('kpi-disbursed-percent').innerText = `เบิกจ่ายแล้ว ${disRate}% ของงบอนุมัติ`;
+
+      document.getElementById('cat-total-badge').innerText = `${totalCount} โครงการ`;
+      document.getElementById('status-total-badge').innerText = `${totalCount} โครงการ`;
+
+      renderCategorySection(catCounts, totalCount);
+      renderStatusSection(statusCounts, totalCount);
+      renderOwnerSection(ownerCounts, totalCount);
+      renderFilteredProjectsTable(filtered);
     }
 
     function renderCategorySection(catCounts, totalCount) {
@@ -1393,7 +1484,7 @@
       const labels = Object.keys(catCounts);
       if (labels.length === 0 || totalCount === 0) {
         stackedBar.innerHTML = '<div class="w-full bg-slate-200 dark:bg-slate-800 h-full"></div>';
-        listContainer.innerHTML = '<p class="text-slate-400 text-center py-4 text-xs">ไม่มีข้อมูลโครงการในปีนี้</p>';
+        listContainer.innerHTML = '<p class="text-slate-400 text-center py-4 text-xs">ไม่พบข้อมูลตามตัวกรองนี้</p>';
         return;
       }
 
@@ -1430,7 +1521,7 @@
         statusChart.data.datasets[0].data = [1];
         statusChart.data.datasets[0].backgroundColor = ['#94a3b8'];
         statusChart.update();
-        listContainer.innerHTML = '<p class="text-slate-400 text-center py-2 text-xs">ไม่มีข้อมูลสถานะ</p>';
+        listContainer.innerHTML = '<p class="text-slate-400 text-center py-2 text-xs">ไม่พบข้อมูลตามตัวกรองนี้</p>';
         return;
       }
 
@@ -1474,7 +1565,7 @@
         ownerBarChart.data.labels = ['ไม่มีข้อมูล'];
         ownerBarChart.data.datasets[0].data = [0];
         ownerBarChart.update();
-        summaryContainer.innerHTML = '<p class="text-slate-400 text-center py-4 text-xs">ไม่มีข้อมูล</p>';
+        summaryContainer.innerHTML = '<p class="text-slate-400 text-center py-4 text-xs">ไม่พบข้อมูลตามตัวกรองนี้</p>';
         return;
       }
 
@@ -1495,7 +1586,7 @@
           <div class="p-2 sm:p-2.5 rounded-xl bg-white dark:bg-[#111928]/90 border border-slate-200 dark:border-slate-800/60 shadow-sm">
             <div class="flex items-center justify-between gap-2 mb-1">
               <div class="flex items-center gap-1.5 min-w-0">
-                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: ${color}"></span>
+                <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${color}"></span>
                 <span class="text-slate-800 dark:text-slate-200 font-medium text-[11px] sm:text-xs truncate">${idx + 1}. ${name}</span>
               </div>
               <div class="flex items-center gap-1 flex-shrink-0">
@@ -1511,16 +1602,12 @@
       });
     }
 
-    // ==================== ตารางโครงการ ====================
-    function renderProjectsTable() {
+    // เรนเดอร์ตารางโครงการตามผลการกรอง
+    function renderFilteredProjectsTable(filtered) {
       const tbody = document.getElementById('projectsTableBody');
-      const selectedYear = document.getElementById('yearFilterSelect').value;
-      let filtered = globalProjects;
-      if (selectedYear !== 'ALL') filtered = globalProjects.filter(p => String(p.fiscalYear) === String(selectedYear));
-
       tbody.innerHTML = '';
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="p-5 text-center text-slate-400">ไม่พบโครงการที่ค้นหา</td></tr>`;
+      if (!filtered || filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="p-5 text-center text-slate-400">ไม่พบโครงการตามเงื่อนไขที่ค้นหา</td></tr>`;
         return;
       }
 
@@ -1568,6 +1655,10 @@
           </tr>
         `;
       });
+    }
+
+    function renderProjectsTable() {
+      applyFilters();
     }
 
     // ==================== Modal 1: ดูรายละเอียด (Read-Only) ====================
