@@ -234,7 +234,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">📋 ตารางข้อมูลโครงการทั้งหมด</h3>
-          <p class="text-xs text-slate-400 mt-1">คลิกปุ่มด้านขวาเพื่อดูข้อมูลและเอกสารตัวอย่างของแต่ละโครงการ</p>
+          <p class="text-xs text-slate-400 mt-1">คลิกปุ่มด้านขวาเพื่อดูข้อมูล รายละเอียด และเอกสารตัวอย่างของแต่ละโครงการ</p>
         </div>
         <div id="btnNewProjectTop" class="hidden">
           <button onclick="openProjectModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3.5 py-2 rounded-lg font-medium transition shadow flex items-center gap-1.5">
@@ -244,12 +244,13 @@
       </div>
 
       <div class="overflow-x-auto custom-scrollbar">
-        <table class="w-full text-left text-xs text-slate-300 min-w-[900px]">
+        <table class="w-full text-left text-xs text-slate-300 min-w-[950px]">
           <thead class="bg-[#0b1120] text-slate-400 border-b border-slate-800">
             <tr>
               <th class="p-3">รหัส/ชื่อโครงการ</th>
               <th class="p-3">ผู้รับผิดชอบ</th>
               <th class="p-3 text-center">ปีงบฯ</th>
+              <th class="p-3">ระยะเวลาดำเนินการ (ไทย)</th>
               <th class="p-3 text-right">งบอนุมัติ</th>
               <th class="p-3 text-right">เบิกจ่ายจริง</th>
               <th class="p-3 text-center">สถานะ</th>
@@ -257,7 +258,7 @@
             </tr>
           </thead>
           <tbody id="projectsTableBody" class="divide-y divide-slate-800">
-            <tr><td colspan="7" class="p-4 text-center text-slate-500">กำลังโหลดรายการโครงการ...</td></tr>
+            <tr><td colspan="8" class="p-4 text-center text-slate-500">กำลังโหลดรายการโครงการ...</td></tr>
           </tbody>
         </table>
       </div>
@@ -297,19 +298,19 @@
 
   <!-- ==================== Modal 1: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง (Read-Only สำหรับบุคคลทั่วไป) ==================== -->
   <div id="viewProjectModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
-    <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-2xl w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+    <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-3xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
       
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
-          <h3 class="text-base sm:text-lg font-bold text-white">ข้อมูลโครงการและไฟล์ตัวอย่าง</h3>
+          <h3 class="text-base sm:text-lg font-bold text-white">ข้อมูลรายละเอียดโครงการและไฟล์ตัวอย่าง</h3>
         </div>
         <button onclick="closeViewProjectModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
 
-      <!-- สรุปข้อมูลโครงการ (Read-Only Presentation) -->
-      <div class="space-y-3 bg-[#0b1120] p-4 rounded-xl border border-slate-800/80 text-xs">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+      <!-- สรุปข้อมูลโครงการ (Read-Only) -->
+      <div class="space-y-3.5 bg-[#0b1120] p-4 rounded-xl border border-slate-800/80 text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
           <div class="flex items-center gap-2">
             <span class="text-slate-400">รหัสโครงการ:</span>
             <span id="vp_code" class="text-indigo-400 font-semibold bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">-</span>
@@ -328,7 +329,12 @@
           <h4 id="vp_title" class="text-sm sm:text-base font-semibold text-white leading-relaxed">-</h4>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-slate-800/60">
+        <div class="bg-[#111928] p-3 rounded-lg border border-slate-800/60">
+          <span class="text-indigo-300 font-semibold block mb-1">🎯 วัตถุประสงค์ของโครงการ:</span>
+          <p id="vp_objective" class="text-slate-300 leading-relaxed whitespace-pre-line">-</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-slate-800/60">
           <div>
             <span class="text-slate-400">หมวดหมู่/ประเภท:</span>
             <p id="vp_category" class="text-slate-200 mt-0.5">-</p>
@@ -336,6 +342,21 @@
           <div>
             <span class="text-slate-400">ผู้รับผิดชอบโครงการ:</span>
             <p id="vp_owner" class="text-slate-200 font-medium mt-0.5">-</p>
+          </div>
+          <div class="sm:col-span-2">
+            <span class="text-slate-400">🌱 ความสอดคล้องเป้าหมาย SDG:</span>
+            <p id="vp_sdg" class="text-emerald-400 font-medium mt-0.5">-</p>
+          </div>
+          <div class="sm:col-span-2 bg-[#151e32] p-2.5 rounded-lg border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-slate-400 text-[11px] block">🗓️ วันที่เริ่มโครงการ (วันเวลาไทย):</span>
+              <span id="vp_startDate" class="text-slate-200 font-medium">-</span>
+            </div>
+            <div class="hidden sm:block text-slate-600">➔</div>
+            <div>
+              <span class="text-slate-400 text-[11px] block">🏁 วันที่สิ้นสุดโครงการ (วันเวลาไทย):</span>
+              <span id="vp_endDate" class="text-slate-200 font-medium">-</span>
+            </div>
           </div>
           <div>
             <span class="text-slate-400">งบประมาณที่อนุมัติ:</span>
@@ -347,7 +368,6 @@
           </div>
         </div>
 
-        <!-- Google Drive Link รวม (ถ้ามี) -->
         <div id="vp_driveLinkContainer" class="pt-2 border-t border-slate-800/60 hidden">
           <span class="text-slate-400 block mb-1">โฟลเดอร์ Google Drive รวมของโครงการ:</span>
           <a id="vp_driveLink" href="#" target="_blank" class="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 underline font-medium">
@@ -357,7 +377,7 @@
         </div>
       </div>
 
-      <!-- รายการไฟล์เอกสารตัวอย่าง (Read-Only) -->
+      <!-- คลังไฟล์เอกสารตัวอย่าง (Read-Only) -->
       <div class="space-y-2">
         <h4 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-1.5">
           📁 คลังไฟล์เอกสารตัวอย่าง (Project Files)
@@ -378,40 +398,84 @@
     </div>
   </div>
 
-  <!-- ==================== Modal 2: เพิ่ม/แก้ไขโครงการ + ไฟล์ตัวอย่าง (Admin Only) ==================== -->
+  <!-- ==================== Modal 2: เพิ่ม/แก้ไขโครงการ + ไฟล์โครงการตัวอย่างและคลังไฟล์ในตัว (Admin Only) ==================== -->
   <div id="projectModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-3xl w-full space-y-5 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
       
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div>
           <h3 id="projectModalTitle" class="text-base sm:text-lg font-bold text-white">จัดการข้อมูลโครงการ</h3>
-          <p class="text-xs text-slate-400">กรอกข้อมูลโครงการและแนบไฟล์ตัวอย่างโครงการได้พร้อมกัน</p>
+          <p class="text-xs text-slate-400">กรอกข้อมูลโครงการ วัตถุประสงค์ ความสอดคล้อง SDG วันเวลาดำเนินการ และแนบไฟล์ตัวอย่าง</p>
         </div>
         <button onclick="closeProjectModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
 
-      <!-- ข้อมูลโครงการ -->
       <input type="hidden" id="p_id">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
         <div>
           <label class="block text-slate-400 mb-1">รหัสโครงการ (Code)</label>
           <input type="text" id="p_code" placeholder="เช่น ETC-69-01" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">ปีงบประมาณ</label>
+          <label class="block text-slate-400 mb-1">ปีงบประมาณ *</label>
           <input type="text" id="p_fiscalYear" placeholder="2569" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         <div class="sm:col-span-2">
           <label class="block text-slate-400 mb-1">ชื่อโครงการ (Title) *</label>
-          <input type="text" id="p_title" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+          <input type="text" id="p_title" placeholder="ระบุชื่อโครงการเต็ม" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
+
+        <!-- วัตถุประสงค์ของโครงการ -->
+        <div class="sm:col-span-2">
+          <label class="block text-indigo-300 font-semibold mb-1">🎯 วัตถุประสงค์ของโครงการ (Objective)</label>
+          <textarea id="p_objective" rows="3" placeholder="ระบุวัตถุประสงค์ของโครงการ (สามารถขึ้นบรรทัดใหม่เป็นข้อๆ ได้)" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500 custom-scrollbar leading-relaxed"></textarea>
+        </div>
+
+        <!-- ความสอดคล้อง SDG -->
+        <div class="sm:col-span-2">
+          <label class="block text-emerald-400 font-semibold mb-1">🌱 ความสอดคล้องเป้าหมาย SDG (Sustainable Development Goals)</label>
+          <select id="p_sdg" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+            <option value="">-- เลือกเป้าหมาย SDG ที่สอดคล้อง --</option>
+            <option value="SDG 1: ยุติความยากจนทุกรูปแบบในทุกที่">SDG 1: ยุติความยากจนทุกรูปแบบในทุกที่</option>
+            <option value="SDG 2: ยุติความหิวโหย บรรลุความมั่นคงทางอาหาร">SDG 2: ยุติความหิวโหย บรรลุความมั่นคงทางอาหาร</option>
+            <option value="SDG 3: สร้างหลักประกันการมีสุขภาวะที่ดี">SDG 3: สร้างหลักประกันการมีสุขภาวะที่ดี</option>
+            <option value="SDG 4: สร้างหลักประกันการศึกษาที่มีคุณภาพ เท่าเทียม และครอบคลุม">SDG 4: สร้างหลักประกันการศึกษาที่มีคุณภาพ เท่าเทียม และครอบคลุม</option>
+            <option value="SDG 5: บรรลุความเท่าเทียมทางเพศ">SDG 5: บรรลุความเท่าเทียมทางเพศ</option>
+            <option value="SDG 6: สร้างหลักประกันเรื่องน้ำและการสุขาภิบาล">SDG 6: สร้างหลักประกันเรื่องน้ำและการสุขาภิบาล</option>
+            <option value="SDG 7: พลังงานสะอาดที่ทุกคนเข้าถึงได้">SDG 7: พลังงานสะอาดที่ทุกคนเข้าถึงได้</option>
+            <option value="SDG 8: การจ้างงานที่มีคุณค่าและการเติบโตทางเศรษฐกิจ">SDG 8: การจ้างงานที่มีคุณค่าและการเติบโตทางเศรษฐกิจ</option>
+            <option value="SDG 9: อุตสาหกรรม นวัตกรรม และโครงสร้างพื้นฐาน">SDG 9: อุตสาหกรรม นวัตกรรม และโครงสร้างพื้นฐาน</option>
+            <option value="SDG 10: ลดความเหลื่อมล้ำภายในและระหว่างประเทศ">SDG 10: ลดความเหลื่อมล้ำภายในและระหว่างประเทศ</option>
+            <option value="SDG 11: เมืองและชุมชนที่ยั่งยืน">SDG 11: เมืองและชุมชนที่ยั่งยืน</option>
+            <option value="SDG 12: แผนการบริโภคและการผลิตที่ยั่งยืน">SDG 12: แผนการบริโภคและการผลิตที่ยั่งยืน</option>
+            <option value="SDG 13: รับมือกับการเปลี่ยนแปลงสภาพภูมิอากาศ">SDG 13: รับมือกับการเปลี่ยนแปลงสภาพภูมิอากาศ</option>
+            <option value="SDG 14: อนุรักษ์และใช้ประโยชน์จากมหาสมุทรและทรัพยากรทางทะเล">SDG 14: อนุรักษ์และใช้ประโยชน์จากมหาสมุทรและทรัพยากรทางทะเล</option>
+            <option value="SDG 15: ปกป้อง ฟื้นฟู และส่งเสริมการใช้ระบบนิเวศบนบกอย่างยั่งยืน">SDG 15: ปกป้อง ฟื้นฟู และส่งเสริมการใช้ระบบนิเวศบนบกอย่างยั่งยืน</option>
+            <option value="SDG 16: สังคมสงบสุข ยุติธรรม และสถาบันที่มีประสิทธิผล">SDG 16: สังคมสงบสุข ยุติธรรม และสถาบันที่มีประสิทธิผล</option>
+            <option value="SDG 17: เสริมความเข้มแข็งของกลไกการดำเนินงานและความร่วมมือระดับโลก">SDG 17: เสริมความเข้มแข็งของกลไกการดำเนินงานและความร่วมมือระดับโลก</option>
+          </select>
+        </div>
+
+        <!-- ระยะเวลาดำเนินการ (วันเวลาไทย) -->
+        <div class="bg-[#0b1120] p-3 rounded-xl border border-slate-800">
+          <label class="block text-slate-300 font-medium mb-1">🗓️ วันที่เริ่มจัดโครงการ (วันเวลาไทย)</label>
+          <input type="datetime-local" id="p_startDate" class="w-full bg-[#111928] border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-indigo-500">
+          <span id="p_startDate_th" class="block text-[11px] text-indigo-400 mt-1">เวลาไทย: -</span>
+        </div>
+
+        <div class="bg-[#0b1120] p-3 rounded-xl border border-slate-800">
+          <label class="block text-slate-300 font-medium mb-1">🏁 วันที่สิ้นสุดโครงการ (วันเวลาไทย)</label>
+          <input type="datetime-local" id="p_endDate" class="w-full bg-[#111928] border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-indigo-500">
+          <span id="p_endDate_th" class="block text-[11px] text-indigo-400 mt-1">เวลาไทย: -</span>
+        </div>
+
         <div class="sm:col-span-2">
           <label class="block text-slate-400 mb-1">ประเภทโครงการ (Category)</label>
-          <input type="text" id="p_category" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+          <input type="text" id="p_category" placeholder="เช่น โครงการพัฒนาศักยภาพนิสิต..." class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         <div>
           <label class="block text-slate-400 mb-1">ผู้รับผิดชอบโครงการ (Owner)</label>
-          <input type="text" id="p_owner" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+          <input type="text" id="p_owner" placeholder="ชื่อ-นามสกุล ผู้รับผิดชอบ" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         <div>
           <label class="block text-slate-400 mb-1">สถานะโครงการ (Status)</label>
@@ -437,12 +501,12 @@
         </div>
       </div>
 
-      <!-- ไฟล์โครงการตัวอย่าง (Admin อัปโหลด/แก้ไข/ลบ) -->
-      <div class="border-t border-slate-800 pt-4 space-y-3">
+      <!-- ==================== ส่วนฟีเจอร์ไฟล์โครงการตัวอย่างและคลังเอกสาร (รวมไว้ในนี้) ==================== -->
+      <div class="border-t border-slate-800 pt-4 space-y-4">
         <div class="flex items-center justify-between">
           <div>
             <h4 class="text-xs sm:text-sm font-semibold text-indigo-300 flex items-center gap-1.5">
-              📁 แนบไฟล์โครงการตัวอย่างเพิ่ม (Project Example Files)
+              📁 ไฟล์โครงการตัวอย่าง (Project Example Files)
             </h4>
             <p class="text-[11px] text-slate-400">อัปโหลดไฟล์ตัวอย่างพร้อมตั้งชื่อได้หลายไฟล์พร้อมกัน</p>
           </div>
@@ -451,10 +515,14 @@
           </button>
         </div>
 
+        <!-- แถวสำหรับอัปโหลดไฟล์ตัวอย่างใหม่ -->
         <div id="modalFileUploadContainer" class="space-y-2"></div>
 
-        <div class="mt-3">
-          <div class="text-[11px] font-semibold text-slate-400 mb-1.5">ไฟล์โครงการตัวอย่างที่มีในระบบ:</div>
+        <!-- คลังเอกสารและไฟล์โครงการตัวอย่างเดิมของโครงการนี้ -->
+        <div>
+          <h5 class="text-[11px] font-semibold text-slate-400 mb-1.5 flex items-center gap-1">
+            <span>📚 คลังเอกสารและไฟล์โครงการตัวอย่างที่มีในระบบ:</span>
+          </h5>
           <div class="bg-[#0b1120] rounded-xl border border-slate-800 overflow-hidden">
             <div id="modalExistingFilesList" class="divide-y divide-slate-800 text-xs">
               <div class="p-3 text-center text-slate-500 text-[11px]">ไม่มีไฟล์เอกสารตัวอย่าง</div>
@@ -536,6 +604,21 @@
     let currentSettings = {};
     let currentAdmin = null;
     const isMobile = window.innerWidth < 640;
+
+    function formatThaiDateTime(dtString) {
+      if (!dtString) return '-';
+      const date = new Date(dtString);
+      if (isNaN(date.getTime())) return dtString;
+      
+      const thaiMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      const d = date.getDate();
+      const m = thaiMonths[date.getMonth()];
+      const y = date.getFullYear() + 543;
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      
+      return `${d} ${m} ${y} (${hours}:${minutes} น.)`;
+    }
 
     async function postAPI(data) {
       const response = await fetch(API_URL, {
@@ -1007,21 +1090,25 @@
 
       tbody.innerHTML = '';
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-500">ไม่พบโครงการ</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500">ไม่พบโครงการ</td></tr>`;
         return;
       }
 
       filtered.forEach(p => {
         const color = getStatusColor(p.status);
         
-        // แยกปุ่มระหว่าง Admin และ บุคคลทั่วไป
+        const dateRangeThai = (p.startDate || p.endDate) ? `
+          <div class="text-[11px] text-slate-300">${formatThaiDateTime(p.startDate)}</div>
+          <div class="text-[10px] text-slate-400">ถึง ${formatThaiDateTime(p.endDate)}</div>
+        ` : `<span class="text-slate-500 text-[11px]">-</span>`;
+
         const actionButton = currentAdmin ? `
           <button onclick='editProjectPrompt(${JSON.stringify(p)})' class="text-indigo-400 hover:text-indigo-300 font-medium mr-2">แก้ไข/ไฟล์</button>
           <button onclick="deleteProjectConfirm('${p.id}')" class="text-rose-400 hover:text-rose-300 font-medium">ลบ</button>
         ` : `
           <button onclick='openViewProjectModal(${JSON.stringify(p)})' class="bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 px-2.5 py-1 rounded-md text-xs font-medium transition flex items-center gap-1 ml-auto">
             <span>📄</span>
-            <span>ดูไฟล์ตัวอย่าง</span>
+            <span>ดูรายละเอียด</span>
           </button>
         `;
 
@@ -1033,6 +1120,7 @@
             </td>
             <td class="p-3 text-slate-300">${p.owner}</td>
             <td class="p-3 text-center text-slate-400">${p.fiscalYear}</td>
+            <td class="p-3">${dateRangeThai}</td>
             <td class="p-3 text-right text-emerald-400 font-medium">฿${p.approvedBudget.toLocaleString('th-TH')}</td>
             <td class="p-3 text-right text-amber-400 font-medium">฿${p.disbursedAmount.toLocaleString('th-TH')}</td>
             <td class="p-3 text-center">
@@ -1051,6 +1139,10 @@
       document.getElementById('vp_code').innerText = p.code || p.id || '-';
       document.getElementById('vp_fiscalYear').innerText = p.fiscalYear ? `ปีงบฯ ${p.fiscalYear}` : '-';
       document.getElementById('vp_title').innerText = p.title || '-';
+      document.getElementById('vp_objective').innerText = p.objective ? p.objective.trim() : 'ไม่ได้ระบุวัตถุประสงค์โครงการ';
+      document.getElementById('vp_sdg').innerText = p.sdg || 'ไม่ได้ระบุเป้าหมาย SDG';
+      document.getElementById('vp_startDate').innerText = formatThaiDateTime(p.startDate);
+      document.getElementById('vp_endDate').innerText = formatThaiDateTime(p.endDate);
       document.getElementById('vp_category').innerText = p.category || '-';
       document.getElementById('vp_owner').innerText = p.owner || '-';
       document.getElementById('vp_approvedBudget').innerText = `฿${(p.approvedBudget || 0).toLocaleString('th-TH')} บาท`;
@@ -1073,7 +1165,6 @@
         driveBox.classList.add('hidden');
       }
 
-      // แสดงรายการไฟล์ตัวอย่างของโครงการนี้
       renderViewOnlyFiles(p.id);
 
       document.getElementById('viewProjectModal').classList.remove('hidden');
@@ -1100,7 +1191,7 @@
       }
 
       container.innerHTML = '';
-      files.forEach((f, idx) => {
+      files.forEach(f => {
         container.innerHTML += `
           <div class="p-3 flex items-center justify-between hover:bg-slate-800/40 transition gap-3">
             <div class="flex items-center gap-2.5 min-w-0">
@@ -1126,6 +1217,12 @@
       document.getElementById('p_code').value = "";
       document.getElementById('p_fiscalYear').value = document.getElementById('yearFilterSelect').value !== 'ALL' ? document.getElementById('yearFilterSelect').value : "2569";
       document.getElementById('p_title').value = "";
+      document.getElementById('p_objective').value = "";
+      document.getElementById('p_sdg').value = "";
+      document.getElementById('p_startDate').value = "";
+      document.getElementById('p_endDate').value = "";
+      document.getElementById('p_startDate_th').innerText = "เวลาไทย: -";
+      document.getElementById('p_endDate_th').innerText = "เวลาไทย: -";
       document.getElementById('p_category').value = "";
       document.getElementById('p_owner').value = "";
       document.getElementById('p_status').value = "เสนอโครงการ";
@@ -1147,6 +1244,12 @@
       document.getElementById('p_code').value = p.code || '';
       document.getElementById('p_fiscalYear').value = p.fiscalYear || '';
       document.getElementById('p_title').value = p.title || '';
+      document.getElementById('p_objective').value = p.objective || '';
+      document.getElementById('p_sdg').value = p.sdg || '';
+      document.getElementById('p_startDate').value = p.startDate ? p.startDate.substring(0, 16) : '';
+      document.getElementById('p_endDate').value = p.endDate ? p.endDate.substring(0, 16) : '';
+      document.getElementById('p_startDate_th').innerText = `เวลาไทย: ${formatThaiDateTime(p.startDate)}`;
+      document.getElementById('p_endDate_th').innerText = `เวลาไทย: ${formatThaiDateTime(p.endDate)}`;
       document.getElementById('p_category').value = p.category || '';
       document.getElementById('p_owner').value = p.owner || '';
       document.getElementById('p_status').value = p.status || 'เสนอโครงการ';
@@ -1166,6 +1269,13 @@
       document.getElementById('projectModal').classList.add('hidden');
       document.getElementById('projectModal').classList.remove('flex');
     }
+
+    document.getElementById('p_startDate').addEventListener('change', function(e) {
+      document.getElementById('p_startDate_th').innerText = `เวลาไทย: ${formatThaiDateTime(e.target.value)}`;
+    });
+    document.getElementById('p_endDate').addEventListener('change', function(e) {
+      document.getElementById('p_endDate_th').innerText = `เวลาไทย: ${formatThaiDateTime(e.target.value)}`;
+    });
 
     function addFileUploadRowInModal() {
       const container = document.getElementById("modalFileUploadContainer");
@@ -1246,6 +1356,10 @@
         code: document.getElementById('p_code').value.trim(),
         fiscalYear: fiscalYear,
         title: title,
+        objective: document.getElementById('p_objective').value.trim(),
+        sdg: document.getElementById('p_sdg').value,
+        startDate: document.getElementById('p_startDate').value,
+        endDate: document.getElementById('p_endDate').value,
         category: document.getElementById('p_category').value.trim(),
         owner: document.getElementById('p_owner').value.trim(),
         status: document.getElementById('p_status').value,
