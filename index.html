@@ -214,7 +214,7 @@
       </div>
     </div>
 
-    <!-- ==================== ตัวกรองวิเคราะห์ข้อมูลเชิงลึก (ค้นหา / ปีงบฯ / ประเภทโครงการ) ==================== -->
+    <!-- ==================== ตัวกรองวิเคราะห์ข้อมูลเชิงลึก ==================== -->
     <div class="bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-sm space-y-3.5">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
         <div>
@@ -230,8 +230,6 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-        
-        <!-- 1. ช่องค้นหาชื่อโครงการ / รหัส / ผู้รับผิดชอบ -->
         <div class="space-y-1">
           <label class="block font-medium text-slate-600 dark:text-slate-400">ค้นหา (ชื่อโครงการ / รหัส / ผู้รับผิดชอบ):</label>
           <div class="relative">
@@ -240,7 +238,6 @@
           </div>
         </div>
 
-        <!-- 2. List เลือกรายงานแต่ละปีงบประมาณ -->
         <div class="space-y-1">
           <label class="block font-medium text-slate-600 dark:text-slate-400">ปีงบประมาณ:</label>
           <select id="yearFilterSelect" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 cursor-pointer">
@@ -248,14 +245,12 @@
           </select>
         </div>
 
-        <!-- 3. List เลือกประเภทของโครงการ (Category) -->
         <div class="space-y-1 sm:col-span-2 lg:col-span-1">
           <label class="block font-medium text-slate-600 dark:text-slate-400">ประเภทโครงการ (Category):</label>
           <select id="categoryFilterSelect" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 cursor-pointer truncate">
             <option value="ALL">ทุกประเภทโครงการ</option>
           </select>
         </div>
-
       </div>
     </div>
 
@@ -324,12 +319,12 @@
       </div>
     </div>
 
-    <!-- ==================== ส่วนที่ 6: ตารางโครงการ ==================== -->
+    <!-- ==================== ส่วนที่ 6: ตารางข้อมูลโครงการทั้งหมด (ปรับหัวตารางเป็น "เวลาดำเนินการ") ==================== -->
     <div class="bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">📋 ตารางข้อมูลโครงการทั้งหมด</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">คลิกปุ่มด้านขวาเพื่อดูข้อมูล รายละเอียด และเอกสารตัวอย่างของแต่ละโครงการ</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">คลิกปุ่มดูเวลาดำเนินการ หรือเอกสารตัวอย่างของแต่ละโครงการ</p>
         </div>
         <div id="btnNewProjectTop" class="hidden">
           <button onclick="openProjectModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3.5 py-2 rounded-xl font-medium transition shadow-md flex items-center gap-1.5 active:scale-95">
@@ -339,13 +334,14 @@
       </div>
 
       <div class="overflow-x-auto custom-scrollbar">
-        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 min-w-[1000px]">
+        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 min-w-[950px]">
           <thead class="bg-slate-100 dark:bg-[#0b1120] text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
             <tr>
               <th class="p-3">รหัส/ชื่อโครงการ</th>
               <th class="p-3">ผู้รับผิดชอบ</th>
               <th class="p-3 text-center">ปีงบฯ</th>
-              <th class="p-3">ระยะเวลาดำเนินการ (ไทย)</th>
+              <!-- ปรับชื่อหัวตารางเป็น "เวลาดำเนินการ" -->
+              <th class="p-3 text-center">เวลาดำเนินการ</th>
               <th class="p-3 text-right">งบตามแผน</th>
               <th class="p-3 text-right">งบอนุมัติ</th>
               <th class="p-3 text-right">เบิกจ่ายจริง</th>
@@ -361,6 +357,66 @@
     </div>
 
   </main>
+
+  <!-- ==================== Modal: แสดงวันเวลาดำเนินการโครงการ (Timeline Popup ใหม่) ==================== -->
+  <div id="timeModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 modal-backdrop modal-hidden">
+    <div class="bg-white/95 dark:bg-[#151e32]/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-7 max-w-md w-full space-y-4 shadow-2xl modal-content-box">
+      
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-base">
+            ⏱️
+          </div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">กำหนดการดำเนินโครงการ</h3>
+        </div>
+        <button onclick="closeTimeModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-3">
+        <!-- ชื่อโครงการ -->
+        <div>
+          <span class="text-[11px] text-slate-500 dark:text-slate-400">ชื่อโครงการ:</span>
+          <h4 id="timeModalProjTitle" class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-snug mt-0.5 line-clamp-2">-</h4>
+        </div>
+
+        <!-- การ์ดวันเวลาเริ่มต้น & สิ้นสุด -->
+        <div class="bg-slate-50 dark:bg-[#0b1120] p-4 rounded-2xl border border-slate-200 dark:border-slate-800/80 space-y-3 text-xs">
+          <!-- วันเริ่มต้น -->
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">🗓️</span>
+            <div class="flex-1">
+              <span class="text-[11px] text-slate-500 dark:text-slate-400 block">วัน-เวลาเริ่มต้นจัดโครงการ</span>
+              <p id="timeModalStartDate" class="text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">-</p>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-slate-200 dark:border-slate-800"></div>
+
+          <!-- วันสิ้นสุด -->
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">🏁</span>
+            <div class="flex-1">
+              <span class="text-[11px] text-slate-500 dark:text-slate-400 block">วัน-เวลาสิ้นสุดโครงการ</span>
+              <p id="timeModalEndDate" class="text-xs sm:text-sm font-bold text-rose-600 dark:text-rose-400 mt-0.5">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- คำนวณระยะเวลาคร่าวๆ -->
+        <div id="timeModalDurationBox" class="bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-500/20 p-3 rounded-xl flex items-center justify-between text-xs">
+          <span class="text-indigo-900 dark:text-indigo-200 font-medium">รวมระยะเวลาจัดโครงการ:</span>
+          <span id="timeModalDurationText" class="font-bold text-indigo-600 dark:text-indigo-400">-</span>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-slate-200 dark:border-slate-800">
+        <button type="button" onclick="closeTimeModal()" class="w-full sm:w-auto px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl text-xs font-semibold transition active:scale-95">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ==================== Modal: เข้าสู่ระบบ (Glassmorphic) ==================== -->
   <div id="loginModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 modal-backdrop modal-hidden">
@@ -564,15 +620,15 @@
         <div class="sm:col-span-2 bg-slate-50 dark:bg-[#0b1120] p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label class="block text-indigo-600 dark:text-indigo-300 font-semibold mb-1">💰 งบจัดสรรตามแผน (บาท) *</label>
-            <input type="number" id="p_budget" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-indigo-500 shadow-sm">
+            <input type="number" id="p_budget" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-indigo-500 shadow-sm">
           </div>
           <div>
             <label class="block text-emerald-600 dark:text-emerald-400 font-semibold mb-1">✅ งบประมาณที่อนุมัติ (บาท)</label>
-            <input type="number" id="p_approvedBudget" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-emerald-500 shadow-sm">
+            <input type="number" id="p_approvedBudget" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-emerald-500 shadow-sm">
           </div>
           <div>
             <label class="block text-amber-600 dark:text-amber-400 font-semibold mb-1">💳 เบิกจ่ายจริงสะสม (บาท)</label>
-            <input type="number" id="p_disbursedAmount" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-amber-500 shadow-sm">
+            <input type="number" id="p_disbursedAmount" placeholder="0" class="w-full bg-white dark:bg-[#111928] border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white font-semibold outline-none focus:border-amber-500 shadow-sm">
           </div>
         </div>
 
@@ -981,6 +1037,45 @@
       return `${d} ${m} ${y} (${hours}:${minutes} น.)`;
     }
 
+    // ฟังก์ชันคำนวณจำนวนวันระหว่างวันที่
+    function calculateDaysDiff(startStr, endStr) {
+      if (!startStr || !endStr) return null;
+      const d1 = new Date(startStr);
+      const d2 = new Date(endStr);
+      if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return null;
+      const diffTime = d2.getTime() - d1.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays >= 0 ? diffDays : 0;
+    }
+
+    // ==================== ระบบ Popup แสดงเวลาดำเนินการ (ฟีเจอร์ใหม่) ====================
+    function openTimeModal(p) {
+      document.getElementById('timeModalProjTitle').innerText = (p.code ? `[${p.code}] ` : '') + (p.title || '-');
+
+      const sDateText = p.startDate ? formatThaiDateTime(p.startDate) : 'ไม่ได้ระบุวันเริ่มต้น';
+      const eDateText = p.endDate ? formatThaiDateTime(p.endDate) : 'ไม่ได้ระบุวันสิ้นสุด';
+
+      document.getElementById('timeModalStartDate').innerText = sDateText;
+      document.getElementById('timeModalEndDate').innerText = eDateText;
+
+      const durationBox = document.getElementById('timeModalDurationBox');
+      const durationText = document.getElementById('timeModalDurationText');
+      const days = calculateDaysDiff(p.startDate, p.endDate);
+
+      if (days !== null) {
+        durationText.innerText = `${days + 1} วัน (นับรวมวันแรก)`;
+        durationBox.classList.remove('hidden');
+      } else {
+        durationBox.classList.add('hidden');
+      }
+
+      showModal('timeModal');
+    }
+
+    function closeTimeModal() {
+      hideModal('timeModal');
+    }
+
     async function postAPI(data) {
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -1298,9 +1393,7 @@
       }
     }
 
-    // สร้างตัวเลือก Dropdown สำหรับตัวกรองปีและประเภท
     function initFilterDropdowns() {
-      // 1. Dropdown ปีงบประมาณ
       const yearsSet = new Set();
       globalFiscalYears.forEach(fy => yearsSet.add(String(fy.fiscalYear)));
       globalProjects.forEach(p => { if (p.fiscalYear) yearsSet.add(String(p.fiscalYear)); });
@@ -1312,7 +1405,6 @@
       sortedYears.forEach(y => { yearSelect.innerHTML += `<option value="${y}">ปีงบประมาณ ${y}</option>`; });
       if (sortedYears.includes(curYear)) yearSelect.value = curYear;
 
-      // 2. Dropdown ประเภทของโครงการ
       const catSet = new Set();
       globalProjects.forEach(p => {
         if (p.category && p.category.trim()) catSet.add(p.category.trim());
@@ -1326,7 +1418,6 @@
       if (sortedCats.includes(curCat)) catSelect.value = curCat;
     }
 
-    // ฟังก์ชันคำนวณและกรองข้อมูลแบบผสมผสาน (Multi-filtering)
     function applyFilters() {
       const searchKeyword = (document.getElementById('searchInput').value || '').trim().toLowerCase();
       const selectedYear = document.getElementById('yearFilterSelect').value;
@@ -1334,17 +1425,14 @@
 
       let filtered = globalProjects;
 
-      // กรองปีงบประมาณ
       if (selectedYear !== 'ALL') {
         filtered = filtered.filter(p => String(p.fiscalYear) === String(selectedYear));
       }
 
-      // กรองประเภทโครงการ
       if (selectedCategory !== 'ALL') {
         filtered = filtered.filter(p => (p.category || '').trim() === selectedCategory);
       }
 
-      // กรองค้นหาชื่อโครงการ, รหัส, หรือผู้รับผิดชอบ
       if (searchKeyword !== '') {
         filtered = filtered.filter(p => 
           (p.title && p.title.toLowerCase().includes(searchKeyword)) ||
@@ -1365,7 +1453,6 @@
     }
 
     function renderMainDashboard() {
-      // คำนวณกราฟแท่งเปรียบเทียบงบประมาณรายปี (คงเดิมสำหรับภาพรวม)
       const yearsSet = new Set();
       globalFiscalYears.forEach(fy => yearsSet.add(String(fy.fiscalYear)));
       globalProjects.forEach(p => { if (p.fiscalYear) yearsSet.add(String(p.fiscalYear)); });
@@ -1391,7 +1478,6 @@
         }
       });
 
-      // Render การ์ดงบประมาณรายปี
       const cardsContainer = document.getElementById('fiscal-years-cards');
       cardsContainer.innerHTML = '';
       sortedYears.forEach(year => {
@@ -1425,7 +1511,6 @@
       updateChartTheme();
     }
 
-    // อัปเดตสถิติ กราฟ และตารางตามชุดข้อมูลที่ถูกกรอง
     function updateAnalyticsDashboard(filtered) {
       const totalCount = filtered.length;
       document.getElementById('kpi-total-projects').innerText = totalCount.toLocaleString();
@@ -1602,7 +1687,7 @@
       });
     }
 
-    // เรนเดอร์ตารางโครงการตามผลการกรอง
+    // ==================== เรนเดอร์ตารางโครงการ (ปุ่มไอคอนนาฬิกาดูเวลา) ====================
     function renderFilteredProjectsTable(filtered) {
       const tbody = document.getElementById('projectsTableBody');
       tbody.innerHTML = '';
@@ -1613,10 +1698,17 @@
 
       filtered.forEach(p => {
         const color = getStatusColor(p.status);
-        const dateRangeThai = (p.startDate || p.endDate) ? `
-          <div class="text-[11px] text-slate-700 dark:text-slate-300 font-medium">${formatThaiDateTime(p.startDate)}</div>
-          <div class="text-[10px] text-slate-500 dark:text-slate-400">ถึง ${formatThaiDateTime(p.endDate)}</div>
-        ` : `<span class="text-slate-400 text-[11px]">-</span>`;
+
+        // สร้างปุ่มดูเวลาดำเนินการ (มี Icon นาฬิกา ⏱️)
+        const hasDate = (p.startDate && p.startDate.trim()) || (p.endDate && p.endDate.trim());
+        const dateButton = hasDate ? `
+          <button onclick='openTimeModal(${JSON.stringify(p)})' class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-500/10 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 transition shadow-sm text-[11px] font-medium active:scale-95" title="คลิกเพื่อดูวันเวลาจัดโครงการ">
+            <span>⏱️</span>
+            <span>ดูช่วงเวลา</span>
+          </button>
+        ` : `
+          <span class="text-slate-400 text-[11px] italic">ไม่ได้ระบุ</span>
+        `;
 
         let actionButtons = '';
         if (currentUser) {
@@ -1642,7 +1734,7 @@
             </td>
             <td class="p-3 text-slate-600 dark:text-slate-300 font-medium">${p.owner}</td>
             <td class="p-3 text-center text-slate-500 dark:text-slate-400 font-semibold">${p.fiscalYear}</td>
-            <td class="p-3">${dateRangeThai}</td>
+            <td class="p-3 text-center">${dateButton}</td>
             <td class="p-3 text-right text-indigo-600 dark:text-indigo-300 font-semibold">฿${(p.budget || 0).toLocaleString('th-TH')}</td>
             <td class="p-3 text-right text-emerald-600 dark:text-emerald-400 font-semibold">฿${(p.approvedBudget || 0).toLocaleString('th-TH')}</td>
             <td class="p-3 text-right text-amber-600 dark:text-amber-400 font-semibold">฿${(p.disbursedAmount || 0).toLocaleString('th-TH')}</td>
