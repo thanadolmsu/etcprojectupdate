@@ -149,8 +149,7 @@
       <div class="flex items-center justify-between mb-2.5">
         <h2 class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">📊 งบประมาณจัดสรรรวมจำแนกตามปีงบประมาณ</h2>
         <div class="flex items-center gap-2">
-          <span class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">แท็บ FiscalYears</span>
-          <button id="btnCardAddFiscalYear" onclick="openFiscalYearModal()" class="hidden bg-amber-50 dark:bg-amber-500/20 hover:bg-amber-100 dark:hover:bg-amber-500/30 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30 px-2 py-0.5 rounded text-[11px] font-medium transition items-center gap-1">
+          <button id="btnCardAddFiscalYear" onclick="openFiscalYearModal()" class="hidden bg-amber-50 dark:bg-amber-500/20 hover:bg-amber-100 dark:hover:bg-amber-500/30 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30 px-2.5 py-0.5 rounded-lg text-[11px] font-medium transition items-center gap-1 shadow-sm">
             <span>+</span> เพิ่มปีงบฯ
           </button>
         </div>
@@ -199,7 +198,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 mb-3 sm:mb-4">
         <div>
           <h3 class="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200">เปรียบเทียบงบประมาณแต่ละปีงบประมาณ</h3>
-          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">งบจัดสรรรวม vs งบที่อนุมัติ vs เบิกจ่ายจริง</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">งบจัดสรรตามแผน vs งบที่อนุมัติ vs เบิกจ่ายจริง</p>
         </div>
         <span class="text-[10px] sm:text-xs text-indigo-600 dark:text-indigo-400 font-medium bg-indigo-50 dark:bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-200 dark:border-transparent self-start sm:self-auto">
           หน่วย: บาท (THB) เต็มจำนวน
@@ -219,7 +218,7 @@
           <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
             <span>🔍</span> ตัวกรองวิเคราะห์ข้อมูลเชิงลึก (Advanced Analytics Filter)
           </h3>
-          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">ค้นหาชื่อโครงการ/ผู้รับผิดชอบ และกรองรายงานแยกตามปีหรือประเภทโครงการแบบผสมผสาน</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">ค้นหาและเลือกดูรายงานแยกตามปีงบประมาณ, ผู้รับผิดชอบ หรือประเภทโครงการแบบผสมผสาน</p>
         </div>
         <button onclick="resetAllFilters()" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 self-start sm:self-auto">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
@@ -227,11 +226,11 @@
         </button>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
         <div class="space-y-1">
-          <label class="block font-medium text-slate-600 dark:text-slate-400">ค้นหา (ชื่อโครงการ / รหัส / ผู้รับผิดชอบ):</label>
+          <label class="block font-medium text-slate-600 dark:text-slate-400">ค้นหาคำสำคัญ:</label>
           <div class="relative">
-            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="พิมพ์คำค้นหา..." class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-slate-800 dark:text-white outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="พิมพ์ชื่อโครงการ/รหัส..." class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-slate-800 dark:text-white outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-400 pointer-events-none">🔍</span>
           </div>
         </div>
@@ -243,7 +242,14 @@
           </select>
         </div>
 
-        <div class="space-y-1 sm:col-span-2 lg:col-span-1">
+        <div class="space-y-1">
+          <label class="block font-medium text-slate-600 dark:text-slate-400">ผู้รับผิดชอบโครงการ:</label>
+          <select id="ownerFilterSelect" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 cursor-pointer truncate">
+            <option value="ALL">ทุกคน (ผู้รับผิดชอบทั้งหมด)</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
           <label class="block font-medium text-slate-600 dark:text-slate-400">ประเภทโครงการ (Category):</label>
           <select id="categoryFilterSelect" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-[#0b1120] border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500 cursor-pointer truncate">
             <option value="ALL">ทุกประเภทโครงการ</option>
@@ -280,7 +286,7 @@
             <h4 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">สัดส่วนสถานะโครงการ (Status)</h4>
             <span id="status-total-badge" class="text-[11px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-500/20 whitespace-nowrap">0 โครงการ</span>
           </div>
-          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">ความคืบหน้า (ยกเลิกโครงการ = สีเทา)</p>
+          <p class="text-[11px] sm:text-slate-500 dark:text-slate-400 mt-1">ความคืบหน้า (ยกเลิกโครงการ = สีเทา)</p>
         </div>
         <div class="h-44 sm:h-48 flex items-center justify-center my-2">
           <canvas id="statusDoughnutChart"></canvas>
@@ -354,6 +360,120 @@
     </div>
 
   </main>
+
+  <!-- ==================== Modal 1: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง (ปรับปรุงปุ่มปิดสีแดงขนาดใหญ่ UX/UI) ==================== -->
+  <div id="viewProjectModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4 z-50 modal-backdrop modal-hidden">
+    <div class="bg-white/95 dark:bg-[#151e32]/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-3xl p-5 sm:p-7 max-w-3xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar modal-content-box">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-indigo-500 animate-pulse"></span>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">ข้อมูลรายละเอียดโครงการและไฟล์ตัวอย่าง</h3>
+        </div>
+        <!-- ปุ่มกากบาทปิดมุมบนขวา ปรับให้เด่นชัดสไตล์ Soft Red Circle -->
+        <button onclick="closeViewProjectModal()" class="w-8 h-8 rounded-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 text-rose-500 hover:text-rose-600 dark:text-rose-400 flex items-center justify-center transition active:scale-90 font-bold text-lg" title="ปิดหน้าต่าง">&times;</button>
+      </div>
+
+      <div class="space-y-3.5 bg-slate-50 dark:bg-[#0b1120] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800/80 text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 dark:text-slate-400">รหัสโครงการ:</span>
+            <span id="vp_code" class="text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50 dark:bg-indigo-500/10 px-2.5 py-0.5 rounded-lg border border-indigo-200 dark:border-indigo-500/20">-</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 dark:text-slate-400">ปีงบประมาณ:</span>
+            <span id="vp_fiscalYear" class="text-slate-800 dark:text-slate-200 font-semibold">-</span>
+          </div>
+          <div>
+            <span id="vp_status_badge" class="px-3 py-1 rounded-full text-[11px] font-semibold">-</span>
+          </div>
+        </div>
+
+        <div>
+          <span class="text-slate-500 dark:text-slate-400 block mb-1">ชื่อโครงการ:</span>
+          <h4 id="vp_title" class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-relaxed">-</h4>
+        </div>
+
+        <div class="bg-white dark:bg-[#111928] p-3.5 rounded-xl border border-slate-200 dark:border-slate-800/60 shadow-sm">
+          <span class="text-indigo-600 dark:text-indigo-300 font-semibold block mb-1">🎯 วัตถุประสงค์ของโครงการ:</span>
+          <p id="vp_objective" class="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">-</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-slate-200 dark:border-slate-800/60">
+          <div>
+            <span class="text-slate-500 dark:text-slate-400">หมวดหมู่/ประเภท:</span>
+            <p id="vp_category" class="text-slate-800 dark:text-slate-200 mt-0.5 font-medium">-</p>
+          </div>
+          <div>
+            <span class="text-slate-500 dark:text-slate-400">ผู้รับผิดชอบโครงการ:</span>
+            <p id="vp_owner" class="text-slate-800 dark:text-slate-200 font-semibold mt-0.5">-</p>
+          </div>
+          <div class="sm:col-span-2">
+            <span class="text-slate-500 dark:text-slate-400">🌱 ความสอดคล้องเป้าหมาย SDG:</span>
+            <p id="vp_sdg" class="text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">-</p>
+          </div>
+          <div class="sm:col-span-2 bg-white dark:bg-[#151e32] p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+            <div>
+              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">🗓️ วันที่เริ่มโครงการ:</span>
+              <span id="vp_startDate" class="text-slate-800 dark:text-slate-200 font-medium">-</span>
+            </div>
+            <div class="hidden sm:block text-slate-400 dark:text-slate-600">➔</div>
+            <div>
+              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">🏁 วันที่สิ้นสุดโครงการ:</span>
+              <span id="vp_endDate" class="text-slate-800 dark:text-slate-200 font-medium">-</span>
+            </div>
+          </div>
+          
+          <!-- เปรียบเทียบงบประมาณครบทั้ง 3 ยอด -->
+          <div class="sm:col-span-2 bg-white dark:bg-[#111928] p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 grid grid-cols-3 gap-2 text-center shadow-sm">
+            <div>
+              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">งบจัดสรรตามแผน</span>
+              <p id="vp_budget" class="text-indigo-600 dark:text-indigo-400 font-bold text-sm mt-0.5">-</p>
+            </div>
+            <div class="border-x border-slate-200 dark:border-slate-800">
+              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">งบประมาณที่อนุมัติ</span>
+              <p id="vp_approvedBudget" class="text-emerald-600 dark:text-emerald-400 font-bold text-sm mt-0.5">-</p>
+            </div>
+            <div>
+              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">เบิกจ่ายจริงสะสม</span>
+              <p id="vp_disbursedAmount" class="text-amber-600 dark:text-amber-400 font-bold text-sm mt-0.5">-</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="vp_driveLinkContainer" class="pt-2 border-t border-slate-200 dark:border-slate-800/60 hidden">
+          <span class="text-slate-500 dark:text-slate-400 block mb-1">โฟลเดอร์ Google Drive รวมของโครงการ:</span>
+          <a id="vp_driveLink" href="#" target="_blank" class="inline-flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            <span>เปิดโฟลเดอร์โครงการบน Google Drive</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+          📁 คลังไฟล์เอกสารตัวอย่าง (Project Files)
+        </h4>
+        <div class="bg-slate-50 dark:bg-[#0b1120] rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <div id="viewProjectFilesList" class="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+            <div class="p-4 text-center text-slate-400 text-xs">กำลังค้นหาไฟล์ตัวอย่าง...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ปุ่มปิดหน้าต่างด้านล่าง: ปรับขนาดใหญ่ขึ้น โทนสีแดงสดใส สไตล์ Modern UX/UI -->
+      <div class="flex justify-end pt-3 border-t border-slate-200 dark:border-slate-800">
+        <button type="button" onclick="closeViewProjectModal()" class="w-full sm:w-auto px-6 py-2.5 sm:px-7 sm:py-3 bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold transition shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 active:scale-95 focus:outline-none focus:ring-2 focus:ring-rose-500/50">
+          <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <span>ปิดหน้าต่าง</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ==================== Modal: แสดงวันเวลาดำเนินการโครงการ ==================== -->
   <div id="timeModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 modal-backdrop modal-hidden">
@@ -470,114 +590,6 @@
         <button type="button" onclick="closeFiscalYearModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-medium transition active:scale-95">ยกเลิก</button>
         <button type="button" onclick="saveFiscalYearSubmit()" id="btnSaveFiscalYear" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 rounded-xl text-xs font-semibold text-white transition shadow-md shadow-amber-600/30 active:scale-95">บันทึกปีงบฯ</button>
       </div>
-    </div>
-  </div>
-
-  <!-- ==================== Modal 1: ดูรายละเอียดโครงการ (Read-Only) ==================== -->
-  <div id="viewProjectModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4 z-50 modal-backdrop modal-hidden">
-    <div class="bg-white/95 dark:bg-[#151e32]/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-3xl p-5 sm:p-7 max-w-3xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar modal-content-box">
-      
-      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-indigo-500 animate-pulse"></span>
-          <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">ข้อมูลรายละเอียดโครงการและไฟล์ตัวอย่าง</h3>
-        </div>
-        <button onclick="closeViewProjectModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold">&times;</button>
-      </div>
-
-      <div class="space-y-3.5 bg-slate-50 dark:bg-[#0b1120] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800/80 text-xs">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2.5">
-          <div class="flex items-center gap-2">
-            <span class="text-slate-500 dark:text-slate-400">รหัสโครงการ:</span>
-            <span id="vp_code" class="text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50 dark:bg-indigo-500/10 px-2.5 py-0.5 rounded-lg border border-indigo-200 dark:border-indigo-500/20">-</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-slate-500 dark:text-slate-400">ปีงบประมาณ:</span>
-            <span id="vp_fiscalYear" class="text-slate-800 dark:text-slate-200 font-semibold">-</span>
-          </div>
-          <div>
-            <span id="vp_status_badge" class="px-3 py-1 rounded-full text-[11px] font-semibold">-</span>
-          </div>
-        </div>
-
-        <div>
-          <span class="text-slate-500 dark:text-slate-400 block mb-1">ชื่อโครงการ:</span>
-          <h4 id="vp_title" class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-relaxed">-</h4>
-        </div>
-
-        <div class="bg-white dark:bg-[#111928] p-3.5 rounded-xl border border-slate-200 dark:border-slate-800/60 shadow-sm">
-          <span class="text-indigo-600 dark:text-indigo-300 font-semibold block mb-1">🎯 วัตถุประสงค์ของโครงการ:</span>
-          <p id="vp_objective" class="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">-</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-slate-200 dark:border-slate-800/60">
-          <div>
-            <span class="text-slate-500 dark:text-slate-400">หมวดหมู่/ประเภท:</span>
-            <p id="vp_category" class="text-slate-800 dark:text-slate-200 mt-0.5 font-medium">-</p>
-          </div>
-          <div>
-            <span class="text-slate-500 dark:text-slate-400">ผู้รับผิดชอบโครงการ:</span>
-            <p id="vp_owner" class="text-slate-800 dark:text-slate-200 font-semibold mt-0.5">-</p>
-          </div>
-          <div class="sm:col-span-2">
-            <span class="text-slate-500 dark:text-slate-400">🌱 ความสอดคล้องเป้าหมาย SDG:</span>
-            <p id="vp_sdg" class="text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">-</p>
-          </div>
-          <div class="sm:col-span-2 bg-white dark:bg-[#151e32] p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
-            <div>
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">🗓️ วันที่เริ่มโครงการ:</span>
-              <span id="vp_startDate" class="text-slate-800 dark:text-slate-200 font-medium">-</span>
-            </div>
-            <div class="hidden sm:block text-slate-400 dark:text-slate-600">➔</div>
-            <div>
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">🏁 วันที่สิ้นสุดโครงการ:</span>
-              <span id="vp_endDate" class="text-slate-800 dark:text-slate-200 font-medium">-</span>
-            </div>
-          </div>
-          
-          <!-- เปรียบเทียบงบประมาณครบทั้ง 3 ยอด -->
-          <div class="sm:col-span-2 bg-white dark:bg-[#111928] p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 grid grid-cols-3 gap-2 text-center shadow-sm">
-            <div>
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">งบจัดสรรตามแผน</span>
-              <p id="vp_budget" class="text-indigo-600 dark:text-indigo-400 font-bold text-sm mt-0.5">-</p>
-            </div>
-            <div class="border-x border-slate-200 dark:border-slate-800">
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">งบประมาณที่อนุมัติ</span>
-              <p id="vp_approvedBudget" class="text-emerald-600 dark:text-emerald-400 font-bold text-sm mt-0.5">-</p>
-            </div>
-            <div>
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">เบิกจ่ายจริงสะสม</span>
-              <p id="vp_disbursedAmount" class="text-amber-600 dark:text-amber-400 font-bold text-sm mt-0.5">-</p>
-            </div>
-          </div>
-        </div>
-
-        <div id="vp_driveLinkContainer" class="pt-2 border-t border-slate-200 dark:border-slate-800/60 hidden">
-          <span class="text-slate-500 dark:text-slate-400 block mb-1">โฟลเดอร์ Google Drive รวมของโครงการ:</span>
-          <a id="vp_driveLink" href="#" target="_blank" class="inline-flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            <span>เปิดโฟลเดอร์โครงการบน Google Drive</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <h4 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-          📁 คลังไฟล์เอกสารตัวอย่าง (Project Files)
-        </h4>
-        <div class="bg-slate-50 dark:bg-[#0b1120] rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-          <div id="viewProjectFilesList" class="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
-            <div class="p-4 text-center text-slate-400 text-xs">กำลังค้นหาไฟล์ตัวอย่าง...</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex justify-end pt-2 border-t border-slate-200 dark:border-slate-800">
-        <button type="button" onclick="closeViewProjectModal()" class="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl text-xs font-semibold transition active:scale-95">
-          ปิดหน้าต่าง
-        </button>
-      </div>
-
     </div>
   </div>
 
@@ -907,10 +919,8 @@
     let currentUser = null;
     const isMobile = window.innerWidth < 640;
 
-    // Helper: ดึงสีประจำตัวของผู้รับผิดชอบให้สัมพันธ์กับกราฟแท่ง
     function getOwnerColor(ownerName) {
       if (!ownerName || ownerName.trim() === '') return '#94a3b8';
-      // ดึงรายชื่อผู้รับผิดชอบทั้งหมดที่ไม่ซ้ำกัน
       const uniqueOwners = Array.from(new Set(globalProjects.map(p => (p.owner || '').trim()).filter(Boolean))).sort();
       const idx = uniqueOwners.indexOf(ownerName.trim());
       if (idx !== -1) {
@@ -1406,6 +1416,18 @@
       sortedYears.forEach(y => { yearSelect.innerHTML += `<option value="${y}">ปีงบประมาณ ${y}</option>`; });
       if (sortedYears.includes(curYear)) yearSelect.value = curYear;
 
+      const ownerSet = new Set();
+      globalProjects.forEach(p => {
+        if (p.owner && p.owner.trim()) ownerSet.add(p.owner.trim());
+      });
+      const sortedOwners = Array.from(ownerSet).sort();
+
+      const ownerSelect = document.getElementById('ownerFilterSelect');
+      const curOwner = ownerSelect.value;
+      ownerSelect.innerHTML = '<option value="ALL">ทุกคน (ผู้รับผิดชอบทั้งหมด)</option>';
+      sortedOwners.forEach(o => { ownerSelect.innerHTML += `<option value="${o}">${o}</option>`; });
+      if (sortedOwners.includes(curOwner)) ownerSelect.value = curOwner;
+
       const catSet = new Set();
       globalProjects.forEach(p => {
         if (p.category && p.category.trim()) catSet.add(p.category.trim());
@@ -1422,12 +1444,17 @@
     function applyFilters() {
       const searchKeyword = (document.getElementById('searchInput').value || '').trim().toLowerCase();
       const selectedYear = document.getElementById('yearFilterSelect').value;
+      const selectedOwner = document.getElementById('ownerFilterSelect').value;
       const selectedCategory = document.getElementById('categoryFilterSelect').value;
 
       let filtered = globalProjects;
 
       if (selectedYear !== 'ALL') {
         filtered = filtered.filter(p => String(p.fiscalYear) === String(selectedYear));
+      }
+
+      if (selectedOwner !== 'ALL') {
+        filtered = filtered.filter(p => (p.owner || '').trim() === selectedOwner);
       }
 
       if (selectedCategory !== 'ALL') {
@@ -1449,6 +1476,7 @@
     function resetAllFilters() {
       document.getElementById('searchInput').value = '';
       document.getElementById('yearFilterSelect').value = 'ALL';
+      document.getElementById('ownerFilterSelect').value = 'ALL';
       document.getElementById('categoryFilterSelect').value = 'ALL';
       applyFilters();
     }
@@ -1704,7 +1732,7 @@
         const ownerColor = getOwnerColor(p.owner);
         const ownerDisplay = (p.owner && p.owner.trim()) ? p.owner.trim() : 'ไม่ระบุผู้รับผิดชอบ';
 
-        // สร้างแถบสีและการ์ดล้อมรอบชื่อผู้รับผิดชอบ (Soft Tinted Card with Left Accent Border)
+        // สร้างแถบสีและการ์ดล้อมรอบชื่อผู้รับผิดชอบ
         const ownerBadge = `
           <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg transition-all shadow-sm max-w-[190px] sm:max-w-none" 
                style="background-color: ${ownerColor}18; border-left: 3.5px solid ${ownerColor};">
@@ -1765,81 +1793,6 @@
 
     function renderProjectsTable() {
       applyFilters();
-    }
-
-    // ==================== Modal 1: ดูรายละเอียด (Read-Only) ====================
-    function openViewProjectModal(p) {
-      document.getElementById('vp_code').innerText = p.code || p.id || '-';
-      document.getElementById('vp_fiscalYear').innerText = p.fiscalYear ? `ปีงบฯ ${p.fiscalYear}` : '-';
-      document.getElementById('vp_title').innerText = p.title || '-';
-      document.getElementById('vp_objective').innerText = p.objective ? p.objective.trim() : 'ไม่ได้ระบุวัตถุประสงค์โครงการ';
-      document.getElementById('vp_sdg').innerText = p.sdg || 'ไม่ได้ระบุเป้าหมาย SDG';
-      document.getElementById('vp_startDate').innerText = formatThaiDateTime(p.startDate);
-      document.getElementById('vp_endDate').innerText = formatThaiDateTime(p.endDate);
-      document.getElementById('vp_category').innerText = p.category || '-';
-      document.getElementById('vp_owner').innerText = p.owner || '-';
-
-      document.getElementById('vp_budget').innerText = `฿${(p.budget || 0).toLocaleString('th-TH')}`;
-      document.getElementById('vp_approvedBudget').innerText = `฿${(p.approvedBudget || 0).toLocaleString('th-TH')}`;
-      document.getElementById('vp_disbursedAmount').innerText = `฿${(p.disbursedAmount || 0).toLocaleString('th-TH')}`;
-
-      const st = p.status || 'เสนอโครงการ';
-      const color = getStatusColor(st);
-      const stBadge = document.getElementById('vp_status_badge');
-      stBadge.innerText = st;
-      stBadge.style.backgroundColor = `${color}15`;
-      stBadge.style.color = color;
-      stBadge.style.border = `1px solid ${color}30`;
-
-      const driveBox = document.getElementById('vp_driveLinkContainer');
-      const driveLink = document.getElementById('vp_driveLink');
-      if (p.driveLink && p.driveLink.trim().startsWith('http')) {
-        driveLink.href = p.driveLink.trim();
-        driveBox.classList.remove('hidden');
-      } else {
-        driveBox.classList.add('hidden');
-      }
-
-      renderViewOnlyFiles(p.id);
-      showModal('viewProjectModal');
-    }
-
-    function closeViewProjectModal() {
-      hideModal('viewProjectModal');
-    }
-
-    function renderViewOnlyFiles(projectId) {
-      const container = document.getElementById('viewProjectFilesList');
-      const files = globalProjectFiles.filter(f => String(f.projectId) === String(projectId));
-
-      if (files.length === 0) {
-        container.innerHTML = `
-          <div class="p-6 text-center text-slate-400 text-xs">
-            <span class="block text-2xl mb-1">📭</span>
-            ยังไม่มีไฟล์เอกสารตัวอย่างสำหรับโครงการนี้
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = '';
-      files.forEach(f => {
-        container.innerHTML += `
-          <div class="p-3.5 flex items-center justify-between hover:bg-slate-100 dark:hover:bg-slate-800/40 transition gap-3">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <span class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0 text-sm shadow-sm">📄</span>
-              <div class="min-w-0">
-                <div class="font-semibold text-slate-800 dark:text-slate-200 text-xs truncate">${f.fileName}</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">ผู้อัปโหลด: ${f.uploadedBy || '-'}</div>
-              </div>
-            </div>
-            <a href="${f.fileUrl}" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] px-3.5 py-1.5 rounded-xl font-medium transition shadow-md shadow-indigo-600/20 flex items-center gap-1.5 flex-shrink-0 active:scale-95">
-              <span>เปิดดู/ดาวน์โหลด</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </div>
-        `;
-      });
     }
 
     // ==================== Modal 2: เพิ่ม/แก้ไขโครงการ (CRUD Modal) ====================
