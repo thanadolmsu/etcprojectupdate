@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <!-- แถบควบคุมสถานะผู้ล็อกอินตามสิทธิ์ (Admin / Head / Staff / Executive) -->
+    <!-- แถบควบคุมสถานะผู้ล็อกอินตามสิทธิ์ (Admin / Head / Staff / Lecturer / Student / Executive) -->
     <div id="adminControlBar" class="hidden bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-lg">
       <div class="flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -78,12 +78,19 @@
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2">
+        <!-- ปุ่มเพิ่มโครงการ (แสดงตามสิทธิ์ canCreate) -->
         <button id="btnBarNewProject" onclick="openProjectModal()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
           <span>+</span> เพิ่มโครงการใหม่
         </button>
+        <!-- ปุ่มเพิ่มปีงบประมาณ (แสดงเฉพาะ Admin และ หัวหน้าภาควิชาฯ) -->
+        <button id="btnBarAddFiscalYear" onclick="openFiscalYearModal()" class="hidden bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
+          <span>➕</span> เพิ่มปีงบประมาณ
+        </button>
+        <!-- ปุ่มจัดการสมาชิก (แสดงเฉพาะ Admin) -->
         <button id="btnBarManageUsers" onclick="openUsersManagementModal()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
           <span>👥</span> จัดการสมาชิก & สิทธิ์
         </button>
+        <!-- ปุ่มตั้งค่าระบบ (แสดงเฉพาะ Admin) -->
         <button id="btnBarSettings" onclick="openSettingsModal()" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium transition border border-slate-700">
           ⚙️ ตั้งค่าระบบ/โลโก้
         </button>
@@ -97,7 +104,13 @@
     <div>
       <div class="flex items-center justify-between mb-2.5">
         <h2 class="text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider">📊 งบประมาณจัดสรรรวมจำแนกตามปีงบประมาณ</h2>
-        <span class="text-[11px] sm:text-xs text-slate-400">แท็บ FiscalYears</span>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] sm:text-xs text-slate-400">แท็บ FiscalYears</span>
+          <!-- ปุ่มลัดเพิ่มปีงบประมาณบนการ์ด สำหรับ Admin และ หัวหน้าภาค -->
+          <button id="btnCardAddFiscalYear" onclick="openFiscalYearModal()" class="hidden bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[11px] font-medium transition items-center gap-1">
+            <span>+</span> เพิ่มปีงบฯ
+          </button>
+        </div>
       </div>
       <div id="fiscal-years-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"></div>
     </div>
@@ -302,6 +315,34 @@
     </div>
   </div>
 
+  <!-- ==================== Modal: เพิ่ม/แก้ไขปีงบประมาณ (Fiscal Year Modal สำหรับ Admin & หัวหน้าภาค) ==================== -->
+  <div id="fiscalYearModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+    <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-sm w-full space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-1.5">
+          <span>➕</span> เพิ่ม/แก้ไขปีงบประมาณ
+        </h3>
+        <button onclick="closeFiscalYearModal()" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">ปีงบประมาณ (เช่น 2570) *</label>
+          <input type="text" id="fy_yearInput" placeholder="2570" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500 font-semibold">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">งบประมาณจัดสรรตามแผนรวม (บาท) *</label>
+          <input type="number" id="fy_budgetInput" placeholder="เช่น 1800000" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500 font-semibold text-emerald-400">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="closeFiscalYearModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium transition">ยกเลิก</button>
+        <button type="button" onclick="saveFiscalYearSubmit()" id="btnSaveFiscalYear" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg text-xs font-semibold transition shadow">บันทึกปีงบฯ</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== Modal 1: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง (Read-Only) ==================== -->
   <div id="viewProjectModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-3xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
@@ -402,7 +443,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal 2: เพิ่ม/แก้ไขโครงการ + ไฟล์โครงการตัวอย่างและคลังไฟล์ในตัว ==================== -->
+  <!-- ==================== Modal 2: เพิ่ม/แก้ไขโครงการ + ไฟล์โครงการตัวอย่าง (CRUD Modal) ==================== -->
   <div id="projectModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-3xl w-full space-y-5 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
       
@@ -422,7 +463,7 @@
         </div>
         <div>
           <label class="block text-slate-400 mb-1">ปีงบประมาณ *</label>
-          <input type="text" id="p_fiscalYear" placeholder="2569" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+          <input type="text" id="p_fiscalYear" placeholder="2570" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         <div class="sm:col-span-2">
           <label class="block text-slate-400 mb-1">ชื่อโครงการ (Title) *</label>
@@ -583,7 +624,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal 4: จัดการสมาชิกและสิทธิ์ (User Management & Access Control) ==================== -->
+  <!-- ==================== Modal 4: จัดการสมาชิกและสิทธิ์ (Users Management) ==================== -->
   <div id="usersManagementModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-4xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
       
@@ -606,7 +647,7 @@
 
       <!-- ตารางสมาชิก -->
       <div class="bg-[#0b1120] rounded-xl border border-slate-800 overflow-x-auto custom-scrollbar">
-        <table class="w-full text-left text-xs text-slate-300 min-w-[750px]">
+        <table class="w-full text-left text-xs text-slate-300 min-w-[800px]">
           <thead class="bg-slate-900/80 text-slate-400 border-b border-slate-800">
             <tr>
               <th class="p-3">สมาชิก</th>
@@ -634,7 +675,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal 5: ฟอร์มเพิ่ม/แก้ไขสิทธิ์สมาชิก พร้อม Username & Password ==================== -->
+  <!-- ==================== Modal 5: ฟอร์มเพิ่ม/แก้ไขสิทธิ์สมาชิก (6 บทบาท) ==================== -->
   <div id="userEditModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-md w-full space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -649,7 +690,7 @@
           <input type="text" id="modalUserUsername" placeholder="เช่น somchai_etc" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">รหัสผ่าน (Password) * (สามารถแก้ไขใน Google Sheets ได้)</label>
+          <label class="block text-slate-400 mb-1">รหัสผ่าน (Password) * (แก้ไขใน Google Sheets ได้)</label>
           <input type="text" id="modalUserPassword" placeholder="กำหนดรหัสผ่าน" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         <div>
@@ -661,14 +702,16 @@
           <input type="email" id="modalUserEmail" placeholder="user@msu.ac.th" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         
-        <!-- ตัวเลือกบทบาทใหม่ 4 ระดับ -->
+        <!-- ตัวเลือกบทบาท 6 ระดับ -->
         <div>
-          <label class="block text-slate-400 mb-1">บทบาท (Role)</label>
+          <label class="block text-slate-400 mb-1">บทบาท (Role) *</label>
           <select id="modalUserRole" onchange="autoCheckPermissionsByRole()" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
             <option value="ผู้บริหารคณะศึกษาศาสตร์ (Executive)">1. ผู้บริหารคณะศึกษาศาสตร์ (Executive)</option>
             <option value="หัวหน้าภาควิชาฯ (Head)">2. หัวหน้าภาควิชาฯ (Head)</option>
             <option value="เจ้าหน้าที่/เลขาฯภาควิชา (Staff)">3. เจ้าหน้าที่/เลขาฯภาควิชา (Staff)</option>
-            <option value="ผู้ดูแลระบบ (Admin)">4. ผู้ดูแลระบบ (Admin)</option>
+            <option value="อาจารย์ (Lecturer)">4. อาจารย์ (Lecturer)</option>
+            <option value="นิสิต (Student)">5. นิสิต (Student)</option>
+            <option value="ผู้ดูแลระบบ (Admin)">6. ผู้ดูแลระบบ (Admin)</option>
           </select>
         </div>
 
@@ -718,7 +761,7 @@
     let globalProjectFiles = [];
     let globalUsers = [];
     let currentSettings = {};
-    let currentUser = null; // ข้อมูลผู้ใช้งานปัจจุบันพร้อมสิทธิ์
+    let currentUser = null;
     const isMobile = window.innerWidth < 640;
 
     function formatThaiDateTime(dtString) {
@@ -808,13 +851,14 @@
       alert("ออกจากระบบเรียบร้อย");
     }
 
-    // กำหนดการแสดงผล UI ตามสิทธิ์ของผู้ใช้คนนั้นๆ
     function applyUserState() {
       const controlBar = document.getElementById('adminControlBar');
       const btnLogin = document.getElementById('btnLogin');
       const btnNewProjTop = document.getElementById('btnNewProjectTop');
 
       const btnBarNewProj = document.getElementById('btnBarNewProject');
+      const btnBarAddFiscalYear = document.getElementById('btnBarAddFiscalYear');
+      const btnCardAddFiscalYear = document.getElementById('btnCardAddFiscalYear');
       const btnBarManageUsers = document.getElementById('btnBarManageUsers');
       const btnBarSettings = document.getElementById('btnBarSettings');
 
@@ -825,7 +869,7 @@
         document.getElementById('adminUserNameDisplay').innerText = currentUser.name || currentUser.username;
         document.getElementById('adminRoleBadge').innerText = currentUser.role || 'Member';
 
-        // เช็คสิทธิ์สร้างโครงการ (canCreate)
+        // 1. สิทธิ์สร้างโครงการ (canCreate)
         if (currentUser.canCreate) {
           btnNewProjTop.classList.remove('hidden');
           btnBarNewProj.classList.remove('hidden');
@@ -834,7 +878,19 @@
           btnBarNewProj.classList.add('hidden');
         }
 
-        // เช็คสิทธิ์จัดการสมาชิก (canManageUsers)
+        // 2. สิทธิ์เพิ่มปีงบประมาณ (ให้เฉพาะ Admin และ หัวหน้าภาควิชาฯ)
+        const isHeadOrAdmin = (currentUser.role && (currentUser.role.includes('หัวหน้าภาควิชาฯ') || currentUser.role.includes('ผู้ดูแลระบบ'))) || currentUser.canManageUsers;
+        if (isHeadOrAdmin) {
+          btnBarAddFiscalYear.classList.remove('hidden');
+          btnCardAddFiscalYear.classList.remove('hidden');
+          btnCardAddFiscalYear.classList.add('inline-flex');
+        } else {
+          btnBarAddFiscalYear.classList.add('hidden');
+          btnCardAddFiscalYear.classList.add('hidden');
+          btnCardAddFiscalYear.classList.remove('inline-flex');
+        }
+
+        // 3. สิทธิ์จัดการสมาชิกและตั้งค่าระบบ (Admin Only)
         if (currentUser.canManageUsers) {
           btnBarManageUsers.classList.remove('hidden');
           btnBarSettings.classList.remove('hidden');
@@ -847,10 +903,64 @@
         btnLogin.classList.remove('hidden');
         btnNewProjTop.classList.add('hidden');
         btnBarNewProj.classList.add('hidden');
+        btnBarAddFiscalYear.classList.add('hidden');
+        btnCardAddFiscalYear.classList.add('hidden');
+        btnCardAddFiscalYear.classList.remove('inline-flex');
         btnBarManageUsers.classList.add('hidden');
         btnBarSettings.classList.add('hidden');
       }
       renderProjectsTable();
+    }
+
+    // ==================== ระบบเพิ่มปีงบประมาณ (Fiscal Year Management) ====================
+    function openFiscalYearModal() {
+      // แนะนำปีงบฯ ถัดไปอัตโนมัติ
+      const years = globalFiscalYears.map(f => parseInt(f.fiscalYear)).filter(n => !isNaN(n));
+      const nextYear = years.length > 0 ? Math.max(...years) + 1 : 2570;
+      document.getElementById('fy_yearInput').value = nextYear;
+      document.getElementById('fy_budgetInput').value = 1800000;
+
+      document.getElementById('fiscalYearModal').classList.remove('hidden');
+      document.getElementById('fiscalYearModal').classList.add('flex');
+    }
+
+    function closeFiscalYearModal() {
+      document.getElementById('fiscalYearModal').classList.add('hidden');
+      document.getElementById('fiscalYearModal').classList.remove('flex');
+    }
+
+    async function saveFiscalYearSubmit() {
+      const year = document.getElementById('fy_yearInput').value.trim();
+      const budget = parseFloat(document.getElementById('fy_budgetInput').value) || 0;
+
+      if (!year) {
+        return alert("กรุณาระบุปีงบประมาณ เช่น 2570");
+      }
+
+      const btn = document.getElementById('btnSaveFiscalYear');
+      btn.disabled = true;
+      btn.innerText = "กำลังบันทึก...";
+
+      try {
+        const res = await postAPI({
+          action: 'saveFiscalYear',
+          fiscalYear: year,
+          totalBudget: budget
+        });
+
+        if (res.status === 'success') {
+          closeFiscalYearModal();
+          await fetchDashboardData();
+          alert(res.message || `บันทึกปีงบประมาณ ${year} เรียบร้อยแล้ว`);
+        } else {
+          alert("เกิดข้อผิดพลาด: " + res.message);
+        }
+      } catch (err) {
+        alert("เชื่อมต่อ API ล้มเหลว: " + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "บันทึกปีงบฯ";
+      }
     }
 
     // ==================== แดชบอร์ด & Charts ====================
@@ -1363,7 +1473,7 @@
       document.getElementById('projectModalTitle').innerText = "เพิ่มโครงการใหม่และแนบไฟล์ตัวอย่าง";
       document.getElementById('p_id').value = "PRJ-" + Date.now();
       document.getElementById('p_code').value = "";
-      document.getElementById('p_fiscalYear').value = document.getElementById('yearFilterSelect').value !== 'ALL' ? document.getElementById('yearFilterSelect').value : "2569";
+      document.getElementById('p_fiscalYear').value = document.getElementById('yearFilterSelect').value !== 'ALL' ? document.getElementById('yearFilterSelect').value : "2570";
       document.getElementById('p_title').value = "";
       document.getElementById('p_objective').value = "";
       document.getElementById('p_sdg').value = "";
@@ -1372,7 +1482,7 @@
       document.getElementById('p_startDate_th').innerText = "เวลาไทย: -";
       document.getElementById('p_endDate_th').innerText = "เวลาไทย: -";
       document.getElementById('p_category').value = "";
-      document.getElementById('p_owner').value = "";
+      document.getElementById('p_owner').value = currentUser ? (currentUser.name || '') : '';
       document.getElementById('p_status').value = "เสนอโครงการ";
       document.getElementById('p_approvedBudget').value = 0;
       document.getElementById('p_disbursedAmount').value = 0;
@@ -1597,7 +1707,7 @@
       }
     }
 
-    // ==================== ระบบจัดการสมาชิกและสิทธิ์ (Users & Access Control) ====================
+    // ==================== ระบบจัดการสมาชิกและสิทธิ์ (Users Management) ====================
     async function loadAllUsers() {
       try {
         const res = await fetch(`${API_URL}?action=getUsersList`);
@@ -1637,7 +1747,7 @@
             </td>
             <td class="p-3">
               <div class="font-mono text-indigo-300 font-semibold">${u.username}</div>
-              <div class="text-[11px] text-slate-400">รหัสผ่าน: <span class="text-slate-300">${u.password}</span></div>
+              <div class="text-[11px] text-slate-400">รหัสผ่าน: <span class="text-slate-300 font-mono">${u.password}</span></div>
             </td>
             <td class="p-3"><span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">${u.role}</span></td>
             <td class="p-3 text-center">${u.canCreate ? '✅' : '❌'}</td>
@@ -1690,7 +1800,7 @@
       document.getElementById('userEditModal').classList.remove('flex');
     }
 
-    // ฟังก์ชันช่วยติ๊กสิทธิ์เริ่มต้นตามบทบาทอัตโนมัติ
+    // ฟังก์ชันช่วยติ๊กสิทธิ์เริ่มต้นตามบทบาท 6 ระดับ
     function autoCheckPermissionsByRole() {
       const role = document.getElementById('modalUserRole').value;
       if (role.includes('ผู้บริหารคณะศึกษาศาสตร์')) {
@@ -1706,6 +1816,16 @@
       } else if (role.includes('เจ้าหน้าที่/เลขาฯภาควิชา')) {
         document.getElementById('chkCreate').checked = true;
         document.getElementById('chkEdit').checked = true;
+        document.getElementById('chkDelete').checked = false;
+        document.getElementById('chkManageUsers').checked = false;
+      } else if (role.includes('อาจารย์')) {
+        document.getElementById('chkCreate').checked = true;
+        document.getElementById('chkEdit').checked = true;
+        document.getElementById('chkDelete').checked = false;
+        document.getElementById('chkManageUsers').checked = false;
+      } else if (role.includes('นิสิต')) {
+        document.getElementById('chkCreate').checked = false;
+        document.getElementById('chkEdit').checked = false;
         document.getElementById('chkDelete').checked = false;
         document.getElementById('chkManageUsers').checked = false;
       } else if (role.includes('ผู้ดูแลระบบ')) {
