@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Google Font: Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
@@ -78,19 +78,15 @@
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2">
-        <!-- ปุ่มเพิ่มโครงการ (แสดงตามสิทธิ์ canCreate) -->
         <button id="btnBarNewProject" onclick="openProjectModal()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
           <span>+</span> เพิ่มโครงการใหม่
         </button>
-        <!-- ปุ่มเพิ่มปีงบประมาณ (แสดงเฉพาะ Admin และ หัวหน้าภาควิชาฯ) -->
         <button id="btnBarAddFiscalYear" onclick="openFiscalYearModal()" class="hidden bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
           <span>➕</span> เพิ่มปีงบประมาณ
         </button>
-        <!-- ปุ่มจัดการสมาชิก (แสดงเฉพาะ Admin) -->
         <button id="btnBarManageUsers" onclick="openUsersManagementModal()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
           <span>👥</span> จัดการสมาชิก & สิทธิ์
         </button>
-        <!-- ปุ่มตั้งค่าระบบ (แสดงเฉพาะ Admin) -->
         <button id="btnBarSettings" onclick="openSettingsModal()" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium transition border border-slate-700">
           ⚙️ ตั้งค่าระบบ/โลโก้
         </button>
@@ -106,7 +102,6 @@
         <h2 class="text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider">📊 งบประมาณจัดสรรรวมจำแนกตามปีงบประมาณ</h2>
         <div class="flex items-center gap-2">
           <span class="text-[11px] sm:text-xs text-slate-400">แท็บ FiscalYears</span>
-          <!-- ปุ่มลัดเพิ่มปีงบประมาณบนการ์ด สำหรับ Admin และ หัวหน้าภาค -->
           <button id="btnCardAddFiscalYear" onclick="openFiscalYearModal()" class="hidden bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[11px] font-medium transition items-center gap-1">
             <span>+</span> เพิ่มปีงบฯ
           </button>
@@ -263,13 +258,14 @@
       </div>
 
       <div class="overflow-x-auto custom-scrollbar">
-        <table class="w-full text-left text-xs text-slate-300 min-w-[950px]">
+        <table class="w-full text-left text-xs text-slate-300 min-w-[1000px]">
           <thead class="bg-[#0b1120] text-slate-400 border-b border-slate-800">
             <tr>
               <th class="p-3">รหัส/ชื่อโครงการ</th>
               <th class="p-3">ผู้รับผิดชอบ</th>
               <th class="p-3 text-center">ปีงบฯ</th>
               <th class="p-3">ระยะเวลาดำเนินการ (ไทย)</th>
+              <th class="p-3 text-right">งบตามแผน</th>
               <th class="p-3 text-right">งบอนุมัติ</th>
               <th class="p-3 text-right">เบิกจ่ายจริง</th>
               <th class="p-3 text-center">สถานะ</th>
@@ -277,7 +273,7 @@
             </tr>
           </thead>
           <tbody id="projectsTableBody" class="divide-y divide-slate-800">
-            <tr><td colspan="8" class="p-4 text-center text-slate-500">กำลังโหลดรายการโครงการ...</td></tr>
+            <tr><td colspan="9" class="p-4 text-center text-slate-500">กำลังโหลดรายการโครงการ...</td></tr>
           </tbody>
         </table>
       </div>
@@ -315,7 +311,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal: เพิ่ม/แก้ไขปีงบประมาณ (Fiscal Year Modal สำหรับ Admin & หัวหน้าภาค) ==================== -->
+  <!-- ==================== Modal: เพิ่ม/แก้ไขปีงบประมาณ (Fiscal Year Modal) ==================== -->
   <div id="fiscalYearModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-sm w-full space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -343,7 +339,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal 1: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง (Read-Only) ==================== -->
+  <!-- ==================== Modal 1: ดูรายละเอียดโครงการ (Read-Only) ==================== -->
   <div id="viewProjectModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-3xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
       
@@ -404,13 +400,21 @@
               <span id="vp_endDate" class="text-slate-200 font-medium">-</span>
             </div>
           </div>
-          <div>
-            <span class="text-slate-400">งบประมาณที่อนุมัติ:</span>
-            <p id="vp_approvedBudget" class="text-emerald-400 font-bold mt-0.5">-</p>
-          </div>
-          <div>
-            <span class="text-slate-400">เบิกจ่ายจริง:</span>
-            <p id="vp_disbursedAmount" class="text-amber-400 font-bold mt-0.5">-</p>
+          
+          <!-- เปรียบเทียบงบประมาณครบทั้ง 3 ยอด -->
+          <div class="sm:col-span-2 bg-[#111928] p-3 rounded-xl border border-slate-800 grid grid-cols-3 gap-2 text-center">
+            <div>
+              <span class="text-slate-400 text-[11px] block">งบจัดสรรตามแผน</span>
+              <p id="vp_budget" class="text-indigo-400 font-bold text-sm mt-0.5">-</p>
+            </div>
+            <div class="border-x border-slate-800">
+              <span class="text-slate-400 text-[11px] block">งบประมาณที่อนุมัติ</span>
+              <p id="vp_approvedBudget" class="text-emerald-400 font-bold text-sm mt-0.5">-</p>
+            </div>
+            <div>
+              <span class="text-slate-400 text-[11px] block">เบิกจ่ายจริงสะสม</span>
+              <p id="vp_disbursedAmount" class="text-amber-400 font-bold text-sm mt-0.5">-</p>
+            </div>
           </div>
         </div>
 
@@ -450,7 +454,7 @@
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div>
           <h3 id="projectModalTitle" class="text-base sm:text-lg font-bold text-white">จัดการข้อมูลโครงการ</h3>
-          <p class="text-xs text-slate-400">กรอกข้อมูลโครงการ วัตถุประสงค์ ความสอดคล้อง SDG วันเวลาดำเนินการ และแนบไฟล์ตัวอย่าง</p>
+          <p class="text-xs text-slate-400">กรอกข้อมูลโครงการ งบจัดสรรตามแผน งบอนุมัติ วัตถุประสงค์ ความสอดคล้อง SDG และแนบไฟล์ตัวอย่าง</p>
         </div>
         <button onclick="closeProjectModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
@@ -468,6 +472,22 @@
         <div class="sm:col-span-2">
           <label class="block text-slate-400 mb-1">ชื่อโครงการ (Title) *</label>
           <input type="text" id="p_title" placeholder="ระบุชื่อโครงการเต็ม" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+        </div>
+
+        <!-- ฟิลด์งบประมาณ 3 ช่อง: งบจัดสรรตามแผน | งบที่อนุมัติ | เบิกจ่ายจริง -->
+        <div class="sm:col-span-2 bg-[#0b1120] p-3 rounded-xl border border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-indigo-300 font-semibold mb-1">💰 งบจัดสรรตามแผน (บาท) *</label>
+            <input type="number" id="p_budget" placeholder="0" class="w-full bg-[#111928] border border-slate-700 rounded-lg p-2 text-white font-semibold outline-none focus:border-indigo-500">
+          </div>
+          <div>
+            <label class="block text-emerald-400 font-semibold mb-1">✅ งบประมาณที่อนุมัติ (บาท)</label>
+            <input type="number" id="p_approvedBudget" placeholder="0" class="w-full bg-[#111928] border border-slate-700 rounded-lg p-2 text-white font-semibold outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-amber-400 font-semibold mb-1">💳 เบิกจ่ายจริงสะสม (บาท)</label>
+            <input type="number" id="p_disbursedAmount" placeholder="0" class="w-full bg-[#111928] border border-slate-700 rounded-lg p-2 text-white font-semibold outline-none focus:border-amber-500">
+          </div>
         </div>
 
         <div class="sm:col-span-2">
@@ -528,14 +548,6 @@
             <option value="เบิกจ่ายเรียบร้อย">เบิกจ่ายเรียบร้อย</option>
             <option value="ยกเลิกโครงการ">ยกเลิกโครงการ</option>
           </select>
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1">งบประมาณที่อนุมัติ (บาท)</label>
-          <input type="number" id="p_approvedBudget" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1">เบิกจ่ายจริง (บาท)</label>
-          <input type="number" id="p_disbursedAmount" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         <div class="sm:col-span-2">
           <label class="block text-slate-400 mb-1">โฟลเดอร์ Google Drive รวมโครงการ (DriveLink)</label>
@@ -702,7 +714,6 @@
           <input type="email" id="modalUserEmail" placeholder="user@msu.ac.th" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
         </div>
         
-        <!-- ตัวเลือกบทบาท 6 ระดับ -->
         <div>
           <label class="block text-slate-400 mb-1">บทบาท (Role) *</label>
           <select id="modalUserRole" onchange="autoCheckPermissionsByRole()" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
@@ -869,7 +880,6 @@
         document.getElementById('adminUserNameDisplay').innerText = currentUser.name || currentUser.username;
         document.getElementById('adminRoleBadge').innerText = currentUser.role || 'Member';
 
-        // 1. สิทธิ์สร้างโครงการ (canCreate)
         if (currentUser.canCreate) {
           btnNewProjTop.classList.remove('hidden');
           btnBarNewProj.classList.remove('hidden');
@@ -878,7 +888,6 @@
           btnBarNewProj.classList.add('hidden');
         }
 
-        // 2. สิทธิ์เพิ่มปีงบประมาณ (ให้เฉพาะ Admin และ หัวหน้าภาควิชาฯ)
         const isHeadOrAdmin = (currentUser.role && (currentUser.role.includes('หัวหน้าภาควิชาฯ') || currentUser.role.includes('ผู้ดูแลระบบ'))) || currentUser.canManageUsers;
         if (isHeadOrAdmin) {
           btnBarAddFiscalYear.classList.remove('hidden');
@@ -890,7 +899,6 @@
           btnCardAddFiscalYear.classList.remove('inline-flex');
         }
 
-        // 3. สิทธิ์จัดการสมาชิกและตั้งค่าระบบ (Admin Only)
         if (currentUser.canManageUsers) {
           btnBarManageUsers.classList.remove('hidden');
           btnBarSettings.classList.remove('hidden');
@@ -912,9 +920,8 @@
       renderProjectsTable();
     }
 
-    // ==================== ระบบเพิ่มปีงบประมาณ (Fiscal Year Management) ====================
+    // ==================== ระบบเพิ่มปีงบประมาณ ====================
     function openFiscalYearModal() {
-      // แนะนำปีงบฯ ถัดไปอัตโนมัติ
       const years = globalFiscalYears.map(f => parseInt(f.fiscalYear)).filter(n => !isNaN(n));
       const nextYear = years.length > 0 ? Math.max(...years) + 1 : 2570;
       document.getElementById('fy_yearInput').value = nextYear;
@@ -1334,7 +1341,7 @@
       });
     }
 
-    // ==================== ตารางโครงการ & สิทธิ์การจัดการ ====================
+    // ==================== ตารางโครงการ ====================
     function renderProjectsTable() {
       const tbody = document.getElementById('projectsTableBody');
       const selectedYear = document.getElementById('yearFilterSelect').value;
@@ -1343,7 +1350,7 @@
 
       tbody.innerHTML = '';
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500">ไม่พบโครงการ</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-500">ไม่พบโครงการ</td></tr>`;
         return;
       }
 
@@ -1379,8 +1386,9 @@
             <td class="p-3 text-slate-300">${p.owner}</td>
             <td class="p-3 text-center text-slate-400">${p.fiscalYear}</td>
             <td class="p-3">${dateRangeThai}</td>
-            <td class="p-3 text-right text-emerald-400 font-medium">฿${p.approvedBudget.toLocaleString('th-TH')}</td>
-            <td class="p-3 text-right text-amber-400 font-medium">฿${p.disbursedAmount.toLocaleString('th-TH')}</td>
+            <td class="p-3 text-right text-indigo-300 font-medium">฿${(p.budget || 0).toLocaleString('th-TH')}</td>
+            <td class="p-3 text-right text-emerald-400 font-medium">฿${(p.approvedBudget || 0).toLocaleString('th-TH')}</td>
+            <td class="p-3 text-right text-amber-400 font-medium">฿${(p.disbursedAmount || 0).toLocaleString('th-TH')}</td>
             <td class="p-3 text-center">
               <span class="px-2 py-0.5 rounded text-[11px] font-medium" style="background-color: ${color}20; color: ${color}; border: 1px solid ${color}40;">
                 ${p.status}
@@ -1403,8 +1411,11 @@
       document.getElementById('vp_endDate').innerText = formatThaiDateTime(p.endDate);
       document.getElementById('vp_category').innerText = p.category || '-';
       document.getElementById('vp_owner').innerText = p.owner || '-';
-      document.getElementById('vp_approvedBudget').innerText = `฿${(p.approvedBudget || 0).toLocaleString('th-TH')} บาท`;
-      document.getElementById('vp_disbursedAmount').innerText = `฿${(p.disbursedAmount || 0).toLocaleString('th-TH')} บาท`;
+
+      // แสดงงบประมาณ 3 ยอด
+      document.getElementById('vp_budget').innerText = `฿${(p.budget || 0).toLocaleString('th-TH')}`;
+      document.getElementById('vp_approvedBudget').innerText = `฿${(p.approvedBudget || 0).toLocaleString('th-TH')}`;
+      document.getElementById('vp_disbursedAmount').innerText = `฿${(p.disbursedAmount || 0).toLocaleString('th-TH')}`;
 
       const st = p.status || 'เสนอโครงการ';
       const color = getStatusColor(st);
@@ -1468,13 +1479,16 @@
       });
     }
 
-    // ==================== Modal 2: เพิ่ม/แก้ไขโครงการ + ไฟล์โครงการตัวอย่าง ====================
+    // ==================== Modal 2: เพิ่ม/แก้ไขโครงการ (CRUD Modal) ====================
     function openProjectModal() {
       document.getElementById('projectModalTitle').innerText = "เพิ่มโครงการใหม่และแนบไฟล์ตัวอย่าง";
       document.getElementById('p_id').value = "PRJ-" + Date.now();
       document.getElementById('p_code').value = "";
       document.getElementById('p_fiscalYear').value = document.getElementById('yearFilterSelect').value !== 'ALL' ? document.getElementById('yearFilterSelect').value : "2570";
       document.getElementById('p_title').value = "";
+      document.getElementById('p_budget').value = 0; // ค่าเริ่มต้นงบจัดสรรตามแผน
+      document.getElementById('p_approvedBudget').value = 0;
+      document.getElementById('p_disbursedAmount').value = 0;
       document.getElementById('p_objective').value = "";
       document.getElementById('p_sdg').value = "";
       document.getElementById('p_startDate').value = "";
@@ -1484,8 +1498,6 @@
       document.getElementById('p_category').value = "";
       document.getElementById('p_owner').value = currentUser ? (currentUser.name || '') : '';
       document.getElementById('p_status').value = "เสนอโครงการ";
-      document.getElementById('p_approvedBudget').value = 0;
-      document.getElementById('p_disbursedAmount').value = 0;
       document.getElementById('p_driveLink').value = "";
 
       document.getElementById('modalFileUploadContainer').innerHTML = "";
@@ -1502,6 +1514,9 @@
       document.getElementById('p_code').value = p.code || '';
       document.getElementById('p_fiscalYear').value = p.fiscalYear || '';
       document.getElementById('p_title').value = p.title || '';
+      document.getElementById('p_budget').value = p.budget || 0; // งบจัดสรรตามแผน
+      document.getElementById('p_approvedBudget').value = p.approvedBudget || 0;
+      document.getElementById('p_disbursedAmount').value = p.disbursedAmount || 0;
       document.getElementById('p_objective').value = p.objective || '';
       document.getElementById('p_sdg').value = p.sdg || '';
       document.getElementById('p_startDate').value = p.startDate ? p.startDate.substring(0, 16) : '';
@@ -1511,8 +1526,6 @@
       document.getElementById('p_category').value = p.category || '';
       document.getElementById('p_owner').value = p.owner || '';
       document.getElementById('p_status').value = p.status || 'เสนอโครงการ';
-      document.getElementById('p_approvedBudget').value = p.approvedBudget || 0;
-      document.getElementById('p_disbursedAmount').value = p.disbursedAmount || 0;
       document.getElementById('p_driveLink').value = p.driveLink || '';
 
       document.getElementById('modalFileUploadContainer').innerHTML = "";
@@ -1616,6 +1629,9 @@
         code: document.getElementById('p_code').value.trim(),
         fiscalYear: fiscalYear,
         title: title,
+        budget: parseFloat(document.getElementById('p_budget').value) || 0, // ส่งค่างบจัดสรรตามแผน
+        approvedBudget: parseFloat(document.getElementById('p_approvedBudget').value) || 0,
+        disbursedAmount: parseFloat(document.getElementById('p_disbursedAmount').value) || 0,
         objective: document.getElementById('p_objective').value.trim(),
         sdg: document.getElementById('p_sdg').value,
         startDate: document.getElementById('p_startDate').value,
@@ -1623,8 +1639,6 @@
         category: document.getElementById('p_category').value.trim(),
         owner: document.getElementById('p_owner').value.trim(),
         status: document.getElementById('p_status').value,
-        approvedBudget: parseFloat(document.getElementById('p_approvedBudget').value) || 0,
-        disbursedAmount: parseFloat(document.getElementById('p_disbursedAmount').value) || 0,
         driveLink: document.getElementById('p_driveLink').value.trim()
       };
 
@@ -1707,7 +1721,7 @@
       }
     }
 
-    // ==================== ระบบจัดการสมาชิกและสิทธิ์ (Users Management) ====================
+    // ==================== ระบบจัดการสมาชิกและสิทธิ์ ====================
     async function loadAllUsers() {
       try {
         const res = await fetch(`${API_URL}?action=getUsersList`);
@@ -1800,7 +1814,6 @@
       document.getElementById('userEditModal').classList.remove('flex');
     }
 
-    // ฟังก์ชันช่วยติ๊กสิทธิ์เริ่มต้นตามบทบาท 6 ระดับ
     function autoCheckPermissionsByRole() {
       const role = document.getElementById('modalUserRole').value;
       if (role.includes('ผู้บริหารคณะศึกษาศาสตร์')) {
