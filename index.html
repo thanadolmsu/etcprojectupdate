@@ -68,15 +68,18 @@
       </div>
     </div>
 
-    <!-- Admin Control Bar -->
-    <div id="adminControlBar" class="hidden bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+    <!-- Admin Control Bar (เพิ่มปุ่มจัดการสมาชิก) -->
+    <div id="adminControlBar" class="hidden bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-lg">
       <div class="flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
         <span class="text-xs text-indigo-200">เข้าสู่ระบบในฐานะ: <strong id="adminUserNameDisplay" class="text-white">Admin</strong></span>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2">
         <button onclick="openProjectModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
           <span>+</span> เพิ่มโครงการใหม่
+        </button>
+        <button onclick="openUsersManagementModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
+          <span>👥</span> จัดการสมาชิก & สิทธิ์
         </button>
         <button onclick="openSettingsModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium transition border border-slate-700">
           ⚙️ ตั้งค่าระบบ/โลโก้
@@ -296,7 +299,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal 1: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง (Read-Only สำหรับบุคคลทั่วไป) ==================== -->
+  <!-- ==================== Modal 1: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง (Read-Only) ==================== -->
   <div id="viewProjectModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
     <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-3xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
       
@@ -501,7 +504,7 @@
         </div>
       </div>
 
-      <!-- ==================== ส่วนฟีเจอร์ไฟล์โครงการตัวอย่างและคลังเอกสาร (รวมไว้ในนี้) ==================== -->
+      <!-- ส่วนฟีเจอร์ไฟล์โครงการตัวอย่างและคลังเอกสาร -->
       <div class="border-t border-slate-800 pt-4 space-y-4">
         <div class="flex items-center justify-between">
           <div>
@@ -515,10 +518,8 @@
           </button>
         </div>
 
-        <!-- แถวสำหรับอัปโหลดไฟล์ตัวอย่างใหม่ -->
         <div id="modalFileUploadContainer" class="space-y-2"></div>
 
-        <!-- คลังเอกสารและไฟล์โครงการตัวอย่างเดิมของโครงการนี้ -->
         <div>
           <h5 class="text-[11px] font-semibold text-slate-400 mb-1.5 flex items-center gap-1">
             <span>📚 คลังเอกสารและไฟล์โครงการตัวอย่างที่มีในระบบ:</span>
@@ -585,6 +586,111 @@
     </div>
   </div>
 
+  <!-- ==================== Modal 4: จัดการสมาชิกและสิทธิ์ (User & Access Control Modal) ==================== -->
+  <div id="usersManagementModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4 z-50">
+    <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-4xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
+      
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            👥 จัดการสมาชิกและการกำหนดสิทธิ์ (User & Access Control)
+          </h3>
+          <p class="text-xs text-slate-400">Admin สามารถกำหนดสิทธิ์การสร้าง แก้ไข ลบ และจัดการสมาชิกรายบุคคลได้</p>
+        </div>
+        <button onclick="closeUsersManagementModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="flex justify-between items-center pt-1">
+        <span class="text-xs text-slate-400 font-medium">รายชื่อสมาชิกทั้งหมดในระบบ</span>
+        <button onclick="openNewUserModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow flex items-center gap-1">
+          <span>+</span> เพิ่มสมาชิกใหม่
+        </button>
+      </div>
+
+      <!-- ตารางสมาชิกและสิทธิ์ -->
+      <div class="bg-[#0b1120] rounded-xl border border-slate-800 overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left text-xs text-slate-300 min-w-[700px]">
+          <thead class="bg-slate-900/80 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-3">สมาชิก</th>
+              <th class="p-3">บทบาท</th>
+              <th class="p-3 text-center">สร้างโครงการ</th>
+              <th class="p-3 text-center">แก้ไขข้อมูล</th>
+              <th class="p-3 text-center">ลบข้อมูล</th>
+              <th class="p-3 text-center">จัดการสมาชิก</th>
+              <th class="p-3 text-right">ดำเนินการ</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBodyModal" class="divide-y divide-slate-800">
+            <tr><td colspan="7" class="p-4 text-center text-slate-500">กำลังโหลดรายชื่อสมาชิก...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-slate-800">
+        <button type="button" onclick="closeUsersManagementModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-medium transition">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== Modal 5: ฟอร์มเพิ่ม/แก้ไขสิทธิ์สมาชิก (Sub-Modal) ==================== -->
+  <div id="userEditModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-[#151e32] border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-md w-full space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="userEditModalTitle" class="text-base font-bold text-white">กำหนดสิทธิ์สมาชิก</h3>
+        <button onclick="closeUserEditModal()" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+
+      <input type="hidden" id="modalUserId">
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">อีเมลสมาชิก *</label>
+          <input type="email" id="modalUserEmail" placeholder="user@msu.ac.th" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">ชื่อ-นามสกุล *</label>
+          <input type="text" id="modalUserName" placeholder="ระบุชื่อ-นามสกุล" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">บทบาท (Role)</label>
+          <select id="modalUserRole" class="w-full bg-[#0b1120] border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-indigo-500">
+            <option value="Staff">เจ้าหน้าที่ (Staff)</option>
+            <option value="Manager">หัวหน้างาน/ผู้จัดการ (Manager)</option>
+            <option value="Admin">ผู้ดูแลระบบ (Admin)</option>
+          </select>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800 space-y-2.5">
+          <label class="block font-semibold text-indigo-300">สิทธิ์ในการดำเนินงาน (CRUD Permissions):</label>
+          <label class="flex items-center gap-2 text-slate-200 cursor-pointer p-1.5 rounded hover:bg-slate-800/40">
+            <input type="checkbox" id="chkCreate" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+            <span><strong>สิทธิ์สร้าง (Create):</strong> เพิ่มโครงการใหม่และอัปโหลดไฟล์</span>
+          </label>
+          <label class="flex items-center gap-2 text-slate-200 cursor-pointer p-1.5 rounded hover:bg-slate-800/40">
+            <input type="checkbox" id="chkEdit" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+            <span><strong>สิทธิ์แก้ไข (Edit):</strong> แก้ไขข้อมูลโครงการและเปลี่ยนชื่อไฟล์</span>
+          </label>
+          <label class="flex items-center gap-2 text-slate-200 cursor-pointer p-1.5 rounded hover:bg-slate-800/40">
+            <input type="checkbox" id="chkDelete" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+            <span><strong>สิทธิ์ลบ (Delete):</strong> ลบโครงการและไฟล์เอกสารออกจากระบบ</span>
+          </label>
+          <label class="flex items-center gap-2 text-slate-200 cursor-pointer p-1.5 rounded hover:bg-slate-800/40">
+            <input type="checkbox" id="chkManageUsers" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+            <span><strong>สิทธิ์แอดมิน (Admin Access):</strong> จัดการสมาชิกและแต่งตั้งสิทธิ์คนอื่น</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeUserEditModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium transition">ยกเลิก</button>
+        <button type="button" onclick="saveUserFromModalSubmit()" id="btnSaveUserModal" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-semibold transition shadow">บันทึกข้อมูลสมาชิก</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // =========================================================================
     // ⚙️ API URL เชื่อมต่อ Google Apps Script Web App
@@ -601,6 +707,7 @@
     let globalProjects = [];
     let globalFiscalYears = [];
     let globalProjectFiles = [];
+    let globalUsers = [];
     let currentSettings = {};
     let currentAdmin = null;
     const isMobile = window.innerWidth < 640;
@@ -1447,6 +1554,147 @@
       }
     }
 
+    // ==================== ระบบจัดการสมาชิกและการกำหนดสิทธิ์ (Users Management & RBAC) ====================
+    async function loadAllUsers() {
+      try {
+        const res = await fetch(`${API_URL}?action=getUsersList`);
+        const json = await res.json();
+        globalUsers = json.users || [];
+        renderUsersTableModal();
+      } catch(e) {
+        globalUsers = [];
+      }
+    }
+
+    function openUsersManagementModal() {
+      renderUsersTableModal();
+      document.getElementById('usersManagementModal').classList.remove('hidden');
+      document.getElementById('usersManagementModal').classList.add('flex');
+    }
+
+    function closeUsersManagementModal() {
+      document.getElementById('usersManagementModal').classList.add('hidden');
+      document.getElementById('usersManagementModal').classList.remove('flex');
+    }
+
+    function renderUsersTableModal() {
+      const tbody = document.getElementById('usersTableBodyModal');
+      tbody.innerHTML = '';
+      if (globalUsers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-500">ไม่พบรายชื่อสมาชิกในระบบ</td></tr>`;
+        return;
+      }
+
+      globalUsers.forEach(u => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="p-3">
+              <div class="font-medium text-white">${u.name}</div>
+              <div class="text-[11px] text-slate-400">${u.email}</div>
+            </td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">${u.role}</span></td>
+            <td class="p-3 text-center">${u.canCreate ? '✅' : '❌'}</td>
+            <td class="p-3 text-center">${u.canEdit ? '✅' : '❌'}</td>
+            <td class="p-3 text-center">${u.canDelete ? '✅' : '❌'}</td>
+            <td class="p-3 text-center">${u.canManageUsers ? '✅' : '❌'}</td>
+            <td class="p-3 text-right whitespace-nowrap">
+              <button onclick='editUserPrompt(${JSON.stringify(u)})' class="text-indigo-400 hover:text-indigo-300 font-medium mr-2">กำหนดสิทธิ์</button>
+              <button onclick="deleteUserConfirm('${u.userId}')" class="text-rose-400 hover:text-rose-300 font-medium">ลบ</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function openNewUserModal() {
+      document.getElementById('userEditModalTitle').innerText = "เพิ่มสมาชิกใหม่และกำหนดสิทธิ์";
+      document.getElementById('modalUserId').value = "USR-" + Date.now().toString().slice(-6);
+      document.getElementById('modalUserEmail').value = "";
+      document.getElementById('modalUserName').value = "";
+      document.getElementById('modalUserRole').value = "Staff";
+      document.getElementById('chkCreate').checked = true;
+      document.getElementById('chkEdit').checked = false;
+      document.getElementById('chkDelete').checked = false;
+      document.getElementById('chkManageUsers').checked = false;
+
+      document.getElementById('userEditModal').classList.remove('hidden');
+      document.getElementById('userEditModal').classList.add('flex');
+    }
+
+    function editUserPrompt(u) {
+      document.getElementById('userEditModalTitle').innerText = "กำหนดสิทธิ์สมาชิก: " + u.name;
+      document.getElementById('modalUserId').value = u.userId;
+      document.getElementById('modalUserEmail').value = u.email;
+      document.getElementById('modalUserName').value = u.name;
+      document.getElementById('modalUserRole').value = u.role || 'Staff';
+      document.getElementById('chkCreate').checked = !!u.canCreate;
+      document.getElementById('chkEdit').checked = !!u.canEdit;
+      document.getElementById('chkDelete').checked = !!u.canDelete;
+      document.getElementById('chkManageUsers').checked = !!u.canManageUsers;
+
+      document.getElementById('userEditModal').classList.remove('hidden');
+      document.getElementById('userEditModal').classList.add('flex');
+    }
+
+    function closeUserEditModal() {
+      document.getElementById('userEditModal').classList.add('hidden');
+      document.getElementById('userEditModal').classList.remove('flex');
+    }
+
+    async function saveUserFromModalSubmit() {
+      const email = document.getElementById('modalUserEmail').value.trim();
+      const name = document.getElementById('modalUserName').value.trim();
+
+      if (!email || !name) {
+        return alert("กรุณากรอกชื่อ-นามสกุล และอีเมลสมาชิก");
+      }
+
+      const userData = {
+        userId: document.getElementById('modalUserId').value,
+        email: email,
+        name: name,
+        role: document.getElementById('modalUserRole').value,
+        canCreate: document.getElementById('chkCreate').checked,
+        canEdit: document.getElementById('chkEdit').checked,
+        canDelete: document.getElementById('chkDelete').checked,
+        canManageUsers: document.getElementById('chkManageUsers').checked,
+        status: "Active"
+      };
+
+      const btn = document.getElementById('btnSaveUserModal');
+      btn.disabled = true; btn.innerText = "กำลังบันทึก...";
+
+      try {
+        const res = await postAPI({ action: 'saveUserPermissions', userData: userData });
+        if (res.status === 'success') {
+          closeUserEditModal();
+          await loadAllUsers();
+          alert(res.message || "บันทึกข้อมูลและสิทธิ์สมาชิกเรียบร้อยแล้ว");
+        } else {
+          alert("เกิดข้อผิดพลาด: " + res.message);
+        }
+      } catch(e) {
+        alert("เชื่อมต่อ API ล้มเหลว: " + e);
+      } finally {
+        btn.disabled = false; btn.innerText = "บันทึกข้อมูลสมาชิก";
+      }
+    }
+
+    async function deleteUserConfirm(userId) {
+      if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกท่านนี้ออกจากระบบ?")) return;
+      try {
+        const res = await postAPI({ action: 'deleteUser', userId: userId });
+        if (res.status === 'success') {
+          await loadAllUsers();
+          alert("ลบสมาชิกเรียบร้อยแล้ว");
+        } else {
+          alert("ลบไม่สำเร็จ: " + res.message);
+        }
+      } catch(e) {
+        alert("เชื่อมต่อ API ล้มเหลว: " + e);
+      }
+    }
+
     // ==================== ตั้งค่าระบบ & โลโก้ ====================
     async function loadAppSettings() {
       try {
@@ -1541,6 +1789,7 @@
       loadAppSettings();
       fetchDashboardData();
       loadAllProjectFiles();
+      loadAllUsers();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
