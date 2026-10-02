@@ -67,7 +67,7 @@
   <header class="sticky top-0 z-40 w-full bg-slate-50/95 dark:bg-[#0b1120]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 shadow-sm transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 py-2.5 sm:py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
       
-      <!-- ฝั่งซ้าย: โลโก้ และชื่อหน่วยงานขนาดใหญ่โดดเด่น -->
+      <!-- ฝั่งซ้าย: โลโก้ และชื่อหน่วยงาน -->
       <div class="flex items-center gap-3 sm:gap-4">
         <div id="appLogoContainer" class="w-11 h-11 sm:w-14 sm:h-14 ipad:w-16 ipad:h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
           <img id="appLogoImg" src="" alt="Logo" class="w-full h-full object-cover hidden">
@@ -97,7 +97,7 @@
 
       <!-- ฝั่งขวา: สลับโหมด, สถานะ, ปุ่มเข้าสู่ระบบ, รีเฟรช -->
       <div class="flex items-center justify-between md:justify-end gap-2 flex-wrap">
-        <button onclick="toggleTheme()" id="themeToggleBtn" class="bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition shadow-sm font-medium flex items-center gap-1 active:scale-95" title="สลับโหมดมืด/สว่าง">
+        <button onclick="toggleTheme()" id="themeToggleBtn" class="bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition shadow-sm font-medium flex items-center gap-1 active:scale-95">
           <span id="themeIcon">🌙</span>
           <span id="themeText" class="hidden sm:inline">โหมดมืด</span>
         </button>
@@ -109,7 +109,7 @@
 
         <div id="adminAuthSection">
           <button onclick="openLoginModal()" id="btnLogin" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition shadow-md font-medium flex items-center gap-1 active:scale-95">
-            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
             <span>เข้าสู่ระบบ</span>
           </button>
         </div>
@@ -126,7 +126,7 @@
   <!-- ==================== Main Content Container ==================== -->
   <main class="max-w-7xl w-full mx-auto p-3 sm:p-5 md:p-6 space-y-5 sm:space-y-7">
     
-    <!-- แถบควบคุมสถานะผู้ล็อกอินตามสิทธิ์ -->
+    <!-- แถบควบคุมสถานะผู้ล็อกอินหลังบ้าน (Admin Control Bar) -->
     <div id="adminControlBar" class="hidden bg-indigo-50/90 dark:bg-indigo-950/40 backdrop-blur-md border border-indigo-200 dark:border-indigo-500/30 rounded-2xl p-3 sm:p-3.5 flex flex-wrap items-center justify-between gap-2.5 shadow-md">
       <div class="flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -136,21 +136,26 @@
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <!-- ปุ่มเพิ่มโครงการ -->
         <button id="btnBarNewProject" onclick="openProjectModal()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-2.5 sm:px-3 py-1.5 rounded-xl font-medium transition shadow-sm flex items-center gap-1 active:scale-95">
           <span>+</span> เพิ่มโครงการ
         </button>
+        <!-- ปุ่มเพิ่มปีงบฯ -->
         <button id="btnBarAddFiscalYear" onclick="openFiscalYearModal()" class="hidden bg-amber-600 hover:bg-amber-500 text-white text-xs px-2.5 sm:px-3 py-1.5 rounded-xl font-medium transition shadow-sm flex items-center gap-1 active:scale-95">
           <span>➕</span> เพิ่มปีงบฯ
         </button>
+        <!-- ปุ่มจัดการสมาชิก -->
         <button id="btnBarManageUsers" onclick="openUsersManagementModal()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-2.5 sm:px-3 py-1.5 rounded-xl font-medium transition shadow-sm flex items-center gap-1 active:scale-95">
           <span>👥</span> จัดการสมาชิก
         </button>
+        <!-- ปุ่มตั้งค่าระบบ -->
         <button id="btnBarSettings" onclick="openSettingsModal()" class="hidden bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs px-2.5 sm:px-3 py-1.5 rounded-xl font-medium transition border border-slate-300 dark:border-slate-700 shadow-sm active:scale-95">
           ⚙️ ตั้งค่า
         </button>
+        <!-- ปุ่มออกจากระบบ -->
         <button onclick="confirmLogoutModal()" class="bg-rose-50 hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs px-2.5 sm:px-3 py-1.5 rounded-xl font-medium transition border border-rose-200 dark:border-rose-500/30 active:scale-95 flex items-center gap-1">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-          <span class="hidden xs:inline">ออก</span>
+          <span class="hidden xs:inline">ออกจากระบบ</span>
         </button>
       </div>
     </div>
@@ -372,11 +377,10 @@
 
   </main>
 
-  <!-- ==================== Modal 1: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง ==================== -->
+  <!-- ==================== Modal: ดูรายละเอียดโครงการและไฟล์ตัวอย่าง ==================== -->
   <div id="viewProjectModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 z-50 modal-backdrop modal-hidden">
     <div class="bg-white/95 dark:bg-[#151e32]/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-3xl p-4 sm:p-6 ipad:p-7 max-w-3xl w-full space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto touch-scroll custom-scrollbar modal-content-box">
       
-      <!-- Modal Header -->
       <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></span>
@@ -435,7 +439,6 @@
             </div>
           </div>
           
-          <!-- เปรียบเทียบงบประมาณครบทั้ง 3 ยอด -->
           <div class="sm:col-span-2 bg-white dark:bg-[#111928] p-3 rounded-2xl border border-slate-200 dark:border-slate-800 grid grid-cols-3 gap-1.5 sm:gap-2 text-center shadow-sm">
             <div>
               <span class="text-slate-500 dark:text-slate-400 text-[10px] sm:text-[11px] block truncate">งบตามแผน</span>
@@ -472,7 +475,7 @@
         </div>
       </div>
 
-      <!-- ปุ่มปิดหน้าต่างสีแดงขนาดใหญ่ สไตล์ UX/UI -->
+      <!-- ปุ่มปิดหน้าต่างสีแดงขนาดใหญ่ -->
       <div class="flex justify-end pt-3 border-t border-slate-200 dark:border-slate-800">
         <button type="button" onclick="closeViewProjectModal()" class="w-full sm:w-auto px-6 py-2.5 sm:px-7 sm:py-3 bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold transition shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 active:scale-95">
           <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -881,6 +884,7 @@
       });
     }
 
+    // ฟังก์ชันเปิด-ปิดสิทธิ์และแสดงปุ่มหลังบ้านตามระดับผู้ใช้
     function applyUserState() {
       const controlBar = document.getElementById('adminControlBar');
       const btnLogin = document.getElementById('btnLogin');
@@ -899,6 +903,7 @@
         document.getElementById('adminUserNameDisplay').innerText = currentUser.name || currentUser.username;
         document.getElementById('adminRoleBadge').innerText = currentUser.role || 'Member';
 
+        // 1. สิทธิ์สร้างโครงการ (canCreate)
         if (currentUser.canCreate) {
           btnNewProjTop.classList.remove('hidden');
           btnBarNewProj.classList.remove('hidden');
@@ -907,6 +912,7 @@
           btnBarNewProj.classList.add('hidden');
         }
 
+        // 2. สิทธิ์เพิ่มปีงบประมาณ (ให้ Admin และ หัวหน้าภาควิชาฯ)
         const isHeadOrAdmin = (currentUser.role && (currentUser.role.includes('หัวหน้าภาควิชาฯ') || currentUser.role.includes('ผู้ดูแลระบบ'))) || currentUser.canManageUsers;
         if (isHeadOrAdmin) {
           btnBarAddFiscalYear.classList.remove('hidden');
@@ -918,6 +924,7 @@
           btnCardAddFiscalYear.classList.remove('inline-flex');
         }
 
+        // 3. สิทธิ์จัดการสมาชิกและตั้งค่าระบบ (Admin Only)
         if (currentUser.canManageUsers) {
           btnBarManageUsers.classList.remove('hidden');
           btnBarSettings.classList.remove('hidden');
@@ -1412,7 +1419,7 @@
               <span class="w-2 h-2 rounded-full flex-shrink-0 mt-1 shadow-sm" style="background-color: ${color}"></span>
               <span class="text-slate-800 dark:text-slate-200 font-medium text-[11px] sm:text-xs leading-relaxed break-words">${label}</span>
             </div>
-            <div class="flex items-center gap-1 flex-shrink-0 text-right mt-0.5">
+            <div class="flex items-center gap-1.5 flex-shrink-0 text-right mt-0.5">
               <span class="font-medium text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs">${count} งาน</span>
               <span class="${textPctClass} font-bold text-[11px] sm:text-xs min-w-[38px] text-right">(${pct}%)</span>
             </div>
@@ -1468,7 +1475,7 @@
       });
     }
 
-    // ==================== เรนเดอร์ตารางโครงการ ====================
+    // ==================== เรนเดอร์ตารางโครงการ (ผูก ID ป้องกัน Syntax Error 100%) ====================
     function renderFilteredProjectsTable(filtered) {
       const tbody = document.getElementById('projectsTableBody');
       tbody.innerHTML = '';
@@ -1501,6 +1508,7 @@
           <span class="text-slate-400 text-[11px] italic">ไม่ได้ระบุ</span>
         `;
 
+        // ปุ่มการจัดการสำหรับ Admin และบุคคลทั่วไป
         let actionButtons = '';
         if (currentUser) {
           const viewBtn = `<button onclick="openViewProjectModalById('${p.id}')" class="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold mr-2 transition">ดูรายละเอียด</button>`;
@@ -1543,7 +1551,7 @@
       applyFilters();
     }
 
-    // ==================== Modal 1: ดูรายละเอียดโครงการ (ค้นหาด้วย ID ปลอดภัย 100%) ====================
+    // ==================== Modal 1: ดูรายละเอียดโครงการ ====================
     function openViewProjectModalById(projectId) {
       const p = globalProjects.find(item => String(item.id) === String(projectId));
       if (!p) {
@@ -1623,7 +1631,7 @@
       });
     }
 
-    // ==================== Modal 2: เพิ่ม/แก้ไขโครงการ (เชื่อมต่อ Dropdown User) ====================
+    // ==================== Modal 2: เพิ่ม/แก้ไขโครงการ ====================
     function openProjectModal() {
       document.getElementById('projectModalTitle').innerText = "เพิ่มโครงการใหม่และแนบไฟล์ตัวอย่าง";
       document.getElementById('p_id').value = "PRJ-" + Date.now();
@@ -1641,7 +1649,6 @@
       document.getElementById('p_endDate_th').innerText = "เวลาไทย: -";
       document.getElementById('p_category').value = "";
       
-      // ดึงรายชื่อเข้า Dropdown และเลือกชื่อตัวเองเป็น Default หากล็อกอินอยู่
       const defaultOwner = currentUser ? (currentUser.name || '') : '';
       populateProjectOwnerDropdown(defaultOwner);
 
@@ -1674,7 +1681,6 @@
       document.getElementById('p_endDate_th').innerText = `เวลาไทย: ${formatThaiDateTime(p.endDate)}`;
       document.getElementById('p_category').value = p.category || '';
       
-      // อัปเดต Dropdown และเลือกชื่อผู้รับผิดชอบเดิมของโครงการนั้นๆ
       populateProjectOwnerDropdown(p.owner || '');
 
       document.getElementById('p_status').value = p.status || 'เสนอโครงการ';
@@ -1913,7 +1919,7 @@
       }
     }
 
-    // ==================== ระบบจัดการสมาชิกและสิทธิ์ ====================
+    // ==================== ระบบจัดการสมาชิกและสิทธิ์ (Users Management) ====================
     async function loadAllUsers() {
       try {
         const res = await fetch(`${API_URL}?action=getUsersList`);
